@@ -10,8 +10,8 @@ html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        primary: mat.$red-palette,
+        tertiary: mat.$orange-palette,
       ),
       typography: Roboto,
       density: 0,
@@ -21,15 +21,15 @@ html {
 
 body {
   color-scheme: dark;
-  background-color: #0f172a;
-  color: #e2e8f0;
+  background-color: #111111;
+  color: #e5e5e5;
   font: var(--mat-sys-body-medium);
   margin: 0;
   height: 100%;
 }
 
 mat-toolbar {
-  background: #1e293b !important;
+  background: #1c1c1c !important;
   color: white !important;
 }
 
@@ -39,39 +39,49 @@ table {
 }
 
 th {
-  background: #1e293b;
+  background: #1c1c1c;
   text-align: left;
   padding: 8px 12px;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #94a3b8;
+  color: #9ca3af;
 }
 
 td {
   padding: 6px 12px;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid #2e2e2e;
   font-size: 0.875rem;
 }
 
 tr:hover td {
-  background: #1e293b;
+  background: #1c1c1c;
 }
 
 .odd--highlighted {
-  background: #f59e0b;
-  color: #000;
+  background: #ef4444;
+  color: #fff;
   font-weight: 700;
   border-radius: 4px;
   padding: 2px 6px;
   transition: background 200ms ease;
 }
 
-.sport--football { color: #22c55e; }
-.sport--tennis { color: #eab308; }
-.sport--basketball { color: #f97316; }
-.sport--hockey { color: #60a5fa; }
-.sport--default { color: #94a3b8; }
+.sport--football {
+  color: #ef4444;
+}
+.sport--tennis {
+  color: #f87171;
+}
+.sport--basketball {
+  color: #dc2626;
+}
+.sport--hockey {
+  color: #fca5a5;
+}
+.sport--default {
+  color: #9ca3af;
+}
 
 @media (max-width: 768px) {
   .table-wrapper {

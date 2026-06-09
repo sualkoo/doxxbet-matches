@@ -1,7 +1,7 @@
 <mat-card>
-  <div class="league-header" (click)="toggle()">
+  <div class="league-header">
     <span class="league-title">{{ league().leagueName }}</span>
-    <button mat-icon-button type="button" (click)="$event.stopPropagation(); toggle()">
+    <button mat-icon-button type="button" (click)="toggle()">
       <mat-icon [class.collapsed]="isCollapsed()">expand_more</mat-icon>
     </button>
   </div>
@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (match of league().matches; track match.ID) {
+        @for (match of league().matches; track match.EventID) {
           <tr app-match-row [match]="match" [highlightedOdd]="highlightedOdd()"></tr>
         }
       </tbody>

@@ -58,6 +58,7 @@ sortedUniqueOddValues[highlightLevel % sortedUniqueOddValues.length]
 ```
 
 For example, with values `[2.53, 2.30, 1.54, 1.01]`:
+
 - Click 1 → highlights **2.53**
 - Click 2 → highlights **2.30**
 - Click 3 → highlights **1.54**
@@ -71,6 +72,7 @@ All `OddCellComponent` cells with a matching value get the amber highlight simul
 **Endpoint:** `GET https://static.doxxbet.sk/offer/list.json`
 
 **Response structure:**
+
 ```json
 {
   "EventChanceTypes": [ { "ID", "Name", "EventDate", "SportID", "RegionID", "LeagueID", "EventChanceTypeID" } ],

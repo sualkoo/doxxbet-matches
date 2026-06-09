@@ -15,7 +15,7 @@ export class MatchesService {
       catchError((error) => {
         console.error('Failed to fetch matches:', error);
         return throwError(() => error);
-      })
+      }),
     );
   }
 }

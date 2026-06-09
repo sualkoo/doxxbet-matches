@@ -1,21 +1,51 @@
 export interface ApiMatch {
-  readonly ID: number;
-  readonly Name: string;
+  readonly EventID: number;
+  readonly EventName: string;
   readonly EventDate: string;
+  readonly BetType: string;
+  readonly EventChanceTypeID: number;
+  readonly EventChanceTypeStatus: string;
+  readonly LiveBetting: string;
+  readonly SportEventID: number;
   readonly SportID: number;
   readonly RegionID: number;
-  readonly LeagueID: number;
-  readonly EventChanceTypeID: number;
+  readonly LeagueCupID: number;
+  readonly ChanceTypeID: string;
+  readonly ChanceTypeName: string;
+  readonly SideBet: number;
+  readonly ActualGamePartID: string;
+  readonly ActualGamePartTime: number;
+  readonly LiveFeedReference: number;
+  readonly LiveBettingView: number;
+  readonly ChannelID: string;
+  readonly EventType: string;
+  readonly CountryID: string;
+  readonly HasStatistics: boolean;
+  readonly HasBetradarHostedStatistics: boolean;
+  readonly SeasonID: number;
+  readonly BetradarSportID: number;
+  readonly HasMatchTracker: boolean;
+  readonly BetBuilderID: number;
+  readonly Provider: string;
+  readonly BetradarStatisticsUrn: string;
+  readonly BetradarStatisticsUrl: string;
+  readonly Widgets: readonly string[];
 }
 
 export interface ApiOdd {
   readonly EventChanceTypeID: number;
-  readonly Value: number;
-  readonly OddTypeID: number; // 1=home(1), 2=draw(X), 3=away(2), 4=homeOrDraw(1X), 5=drawOrAway(X2)
+  readonly OddsID: number;
+  readonly OddsRate: number;
+  readonly Status: string;
+  readonly TipID: string;
+  readonly TipType: string; // "1"=home, "X"=draw, "2"=away, "1X"=homeOrDraw, "X2"=drawOrAway
+  readonly TipOrder: string;
+  readonly CompetitorID: number;
+  readonly PlayerID: number;
 }
 
 export interface ApiResponse {
   readonly EventChanceTypes: readonly ApiMatch[];
-  readonly Odds: readonly ApiOdd[];
-  readonly Labels: Readonly<Record<string, string>>;
+  readonly Odds: Readonly<Record<string, ApiOdd>>;
+  readonly Labels?: Readonly<Record<string, string>>;
 }

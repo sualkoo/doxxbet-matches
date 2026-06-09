@@ -15,7 +15,7 @@ export const matchesReducer = createReducer(
     ...state,
     data: response.EventChanceTypes,
     odds: response.Odds,
-    labels: response.Labels,
+    labels: response.Labels ?? {},
     status: 'success' as const,
     error: null,
   })),
@@ -36,5 +36,5 @@ export const matchesReducer = createReducer(
   on(MatchesActions.cycleOddHighlight, (state) => ({
     ...state,
     highlightLevel: state.highlightLevel + 1,
-  }))
+  })),
 );

@@ -22,26 +22,25 @@ export const selectEnrichedMatches = createSelector(
   selectLabels,
   (matches, odds, labels): EnrichedMatch[] =>
     matches.map((match) => {
-      const matchOdds = odds.filter((o) => o.EventChanceTypeID === match.EventChanceTypeID);
-      const getOdd = (typeId: number): number | null =>
-        matchOdds.find((o) => o.OddTypeID === typeId)?.Value ?? null;
+      const id = match.EventChanceTypeID;
+      const getOdd = (tipType: string): number | null => odds[`${id}_${tipType}`]?.OddsRate ?? null;
 
       const enrichedOdds: MatchOdds = {
-        home: getOdd(1),
-        draw: getOdd(2),
-        away: getOdd(3),
-        homeOrDraw: getOdd(4),
-        drawOrAway: getOdd(5),
+        home: getOdd('1'),
+        draw: getOdd('X'),
+        away: getOdd('2'),
+        homeOrDraw: getOdd('1X'),
+        drawOrAway: getOdd('X2'),
       };
 
       return {
         ...match,
-        sportName: labels['SP_' + match.SportID] ?? 'Unknown',
-        regionName: labels['RE_' + match.RegionID] ?? 'Unknown',
-        leagueName: labels['LC_' + match.LeagueID] ?? 'Unknown',
+        sportName: String(labels['SP_' + match.SportID] ?? 'Unknown'),
+        regionName: String(labels['RE_' + match.RegionID] ?? 'Unknown'),
+        leagueName: String(labels['LC_' + match.LeagueCupID] ?? 'Unknown'),
         odds: enrichedOdds,
       };
-    })
+    }),
 );
 
 // ─── Grouping ─────────────────────────────────────────────────────────────────
@@ -70,7 +69,7 @@ export const selectGroupedMatches = createSelector(
         sportMap.set(match.SportID, sport);
       }
 
-      const leagueId = String(match.LeagueID);
+      const leagueId = String(match.LeagueCupID);
       let league = sport.leagues.find((l) => l.leagueId === leagueId);
       if (!league) {
         league = { leagueId, leagueName: match.leagueName, matches: [] };
@@ -85,7 +84,7 @@ export const selectGroupedMatches = createSelector(
         ...sport,
         leagues: [...sport.leagues].sort((a, b) => a.leagueName.localeCompare(b.leagueName)),
       }));
-  }
+  },
 );
 
 // ─── Highlight selectors ──────────────────────────────────────────────────────
@@ -95,11 +94,11 @@ export const selectSortedUniqueOddValues = createSelector(
   (matches): number[] => {
     const allValues = matches.flatMap((m) =>
       [m.odds.home, m.odds.draw, m.odds.away, m.odds.homeOrDraw, m.odds.drawOrAway].filter(
-        (v): v is number => v !== null
-      )
+        (v): v is number => v !== null,
+      ),
     );
     return [...new Set(allValues)].sort((a, b) => b - a);
-  }
+  },
 );
 
 export const selectCurrentHighlightedOddValue = createSelector(
@@ -108,5 +107,17 @@ export const selectCurrentHighlightedOddValue = createSelector(
   (sortedValues, highlightLevel): number | null => {
     if (sortedValues.length === 0) return null;
     return sortedValues[highlightLevel % sortedValues.length];
-  }
+  },
+);
+
+// ─── Sports list ──────────────────────────────────────────────────────────────
+
+export const selectSports = createSelector(
+  selectGroupedMatches,
+  (groups): { sportId: number; sportName: string; matchCount: number }[] =>
+    groups.map((g) => ({
+      sportId: g.sportId,
+      sportName: g.sportName,
+      matchCount: g.leagues.reduce((sum, l) => sum + l.matches.length, 0),
+    })),
 );

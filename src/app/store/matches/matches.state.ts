@@ -2,7 +2,7 @@ import { ApiMatch, ApiOdd } from '../../core/models';
 
 export interface MatchesState {
   readonly data: readonly ApiMatch[];
-  readonly odds: readonly ApiOdd[];
+  readonly odds: Readonly<Record<string, ApiOdd>>;
   readonly labels: Readonly<Record<string, string>>;
   readonly status: 'idle' | 'loading' | 'success' | 'error';
   readonly error: string | null;
@@ -12,7 +12,7 @@ export interface MatchesState {
 
 export const initialMatchesState: MatchesState = {
   data: [],
-  odds: [],
+  odds: {},
   labels: {},
   status: 'idle',
   error: null,

@@ -26,8 +26,21 @@ h2 {
   margin: 0 0 8px;
 }
 
-:host.sport--football { color: #22c55e; }
-:host.sport--tennis { color: #eab308; }
-:host.sport--basketball { color: #f97316; }
-:host.sport--hockey { color: #60a5fa; }
-:host.sport--default { color: #94a3b8; }
+:host.sport--football {
+  color: #ef4444;
+}
+:host.sport--tennis {
+  color: #f87171;
+}
+:host.sport--basketball {
+  color: #dc2626;
+}
+:host.sport--hockey {
+  color: #fca5a5;
+}
+:host.sport--default {
+  color: #9ca3af;
+}
+:host.sport--default {
+  color: #94a3b8;
+}

@@ -12,11 +12,11 @@ export const loadMatchesEffect = createEffect(
         matchesService.getMatches().pipe(
           map((response) => MatchesActions.loadMatchesSuccess({ response })),
           catchError((err) =>
-            of(MatchesActions.loadMatchesFailure({ error: err.message ?? 'Unknown error' }))
-          )
-        )
-      )
+            of(MatchesActions.loadMatchesFailure({ error: err.message ?? 'Unknown error' })),
+          ),
+        ),
+      ),
     );
   },
-  { functional: true }
+  { functional: true },
 );

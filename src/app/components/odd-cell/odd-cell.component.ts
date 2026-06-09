@@ -16,7 +16,5 @@ export class OddCellComponent {
   value = input<number | null>(null);
   highlightedOdd = input<number | null>(null);
 
-  isHighlighted = computed(
-    () => this.value() !== null && this.value() === this.highlightedOdd()
-  );
+  isHighlighted = computed(() => this.value() !== null && this.value() === this.highlightedOdd());
 }
