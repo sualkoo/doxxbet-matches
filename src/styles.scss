@@ -1,0 +1,81 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  color-scheme: dark;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+mat-toolbar {
+  background: #1e293b !important;
+  color: white !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1e293b;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #334155;
+  font-size: 0.875rem;
+}
+
+tr:hover td {
+  background: #1e293b;
+}
+
+.odd--highlighted {
+  background: #f59e0b;
+  color: #000;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 6px;
+  transition: background 200ms ease;
+}
+
+.sport--football { color: #22c55e; }
+.sport--tennis { color: #eab308; }
+.sport--basketball { color: #f97316; }
+.sport--hockey { color: #60a5fa; }
+.sport--default { color: #94a3b8; }
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;
+    display: block;
+  }
+}

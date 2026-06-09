@@ -1,0 +1,21 @@
+import { ApiMatch, ApiOdd } from '../../core/models';
+
+export interface MatchesState {
+  readonly data: readonly ApiMatch[];
+  readonly odds: readonly ApiOdd[];
+  readonly labels: Readonly<Record<string, string>>;
+  readonly status: 'idle' | 'loading' | 'success' | 'error';
+  readonly error: string | null;
+  readonly collapsedLeagues: readonly string[];
+  readonly highlightLevel: number;
+}
+
+export const initialMatchesState: MatchesState = {
+  data: [],
+  odds: [],
+  labels: {},
+  status: 'idle',
+  error: null,
+  collapsedLeagues: [],
+  highlightLevel: 0,
+};

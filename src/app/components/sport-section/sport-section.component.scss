@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  border-left: 4px solid currentColor;
+  margin-bottom: 32px;
+  padding-left: 0;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  animation: fadeIn 300ms ease;
+}
+
+h2 {
+  padding: 8px 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: inherit;
+  margin: 0 0 8px;
+}
+
+:host.sport--football { color: #22c55e; }
+:host.sport--tennis { color: #eab308; }
+:host.sport--basketball { color: #f97316; }
+:host.sport--hockey { color: #60a5fa; }
+:host.sport--default { color: #94a3b8; }

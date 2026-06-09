@@ -1,0 +1,10 @@
+<td>{{ match().Name }}</td>
+<td>{{ match().EventDate | formatDate }}</td>
+<td>{{ match().sportName }}</td>
+<td>{{ match().regionName }}</td>
+<td>{{ match().leagueName }}</td>
+<app-odd-cell [value]="match().odds.home" [highlightedOdd]="highlightedOdd()" />
+<app-odd-cell [value]="match().odds.draw" [highlightedOdd]="highlightedOdd()" />
+<app-odd-cell [value]="match().odds.away" [highlightedOdd]="highlightedOdd()" />
+<app-odd-cell [value]="match().odds.homeOrDraw" [highlightedOdd]="highlightedOdd()" />
+<app-odd-cell [value]="match().odds.drawOrAway" [highlightedOdd]="highlightedOdd()" />

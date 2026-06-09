@@ -1,0 +1,32 @@
+<mat-card>
+  <div class="league-header" (click)="toggle()">
+    <span class="league-title">{{ league().leagueName }}</span>
+    <button mat-icon-button type="button" (click)="$event.stopPropagation(); toggle()">
+      <mat-icon [class.collapsed]="isCollapsed()">expand_more</mat-icon>
+    </button>
+  </div>
+
+  @if (!isCollapsed()) {
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Sport</th>
+          <th>Region</th>
+          <th>League</th>
+          <th>1</th>
+          <th>X</th>
+          <th>2</th>
+          <th>1X</th>
+          <th>X2</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (match of league().matches; track match.ID) {
+          <tr app-match-row [match]="match" [highlightedOdd]="highlightedOdd()"></tr>
+        }
+      </tbody>
+    </table>
+  }
+</mat-card>
