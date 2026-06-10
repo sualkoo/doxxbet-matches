@@ -11,7 +11,6 @@ export const selectOdds = createSelector(selectMatchesState, (s) => s.odds);
 export const selectLabels = createSelector(selectMatchesState, (s) => s.labels);
 export const selectStatus = createSelector(selectMatchesState, (s) => s.status);
 export const selectError = createSelector(selectMatchesState, (s) => s.error);
-export const selectCollapsedLeagues = createSelector(selectMatchesState, (s) => s.collapsedLeagues);
 export const selectHighlightLevel = createSelector(selectMatchesState, (s) => s.highlightLevel);
 
 // ─── Enriched matches ─────────────────────────────────────────────────────────
@@ -88,28 +87,10 @@ export const selectGroupedMatches = createSelector(
 );
 
 // ─── Highlight selectors ──────────────────────────────────────────────────────
-
-export const selectSortedUniqueOddValues = createSelector(
-  selectEnrichedMatches,
-  (matches): number[] => {
-    const allValues = matches.flatMap((m) =>
-      [m.odds.home, m.odds.draw, m.odds.away, m.odds.homeOrDraw, m.odds.drawOrAway].filter(
-        (v): v is number => v !== null,
-      ),
-    );
-    return [...new Set(allValues)].sort((a, b) => b - a);
-  },
-);
-
-export const selectCurrentHighlightedOddValue = createSelector(
-  selectSortedUniqueOddValues,
-  selectHighlightLevel,
-  (sortedValues, highlightLevel): number | null => {
-    if (sortedValues.length === 0) return null;
-    const len = sortedValues.length;
-    return sortedValues[((highlightLevel % len) + len) % len];
-  },
-);
+//
+// Highlight cycling is computed per-page in MatchListComponent because it must be
+// scoped to the currently visible (country-filtered) leagues. selectHighlightLevel
+// above provides the shared counter that the page logic wraps with modulo.
 
 // ─── Sports list ──────────────────────────────────────────────────────────────
 
@@ -129,6 +110,53 @@ export interface CountryItem {
   regionId: number;
   regionName: string;
   matchCount: number;
+  flagEmoji: string | null;
+}
+
+const COUNTRY_ID_TO_ALPHA2: Readonly<Record<string, string>> = {
+  ARG: 'ar',
+  AUS: 'au',
+  BRA: 'br',
+  BUL: 'bg',
+  CYP: 'cy',
+  CZE: 'cz',
+  DEN: 'dk',
+  ENG: 'gb',
+  ESP: 'es',
+  FRA: 'fr',
+  GRE: 'gr',
+  INA: 'id',
+  ITA: 'it',
+};
+
+function toAlpha2(countryId: string | undefined): string | null {
+  if (!countryId) return null;
+  const normalized = countryId.trim().toUpperCase();
+  if (!normalized) return null;
+
+  if (normalized.length === 2) {
+    return normalized.toLowerCase();
+  }
+
+  return COUNTRY_ID_TO_ALPHA2[normalized] ?? null;
+}
+
+function toFlagEmoji(countryId: string | undefined): string | null {
+  const alpha2 = toAlpha2(countryId);
+  if (!alpha2) return null;
+
+  const [first, second] = alpha2.toUpperCase();
+  if (!first || !second) return null;
+
+  const base = 0x1f1e6;
+  const firstCode = first.charCodeAt(0) - 65;
+  const secondCode = second.charCodeAt(0) - 65;
+
+  if (firstCode < 0 || firstCode > 25 || secondCode < 0 || secondCode > 25) {
+    return null;
+  }
+
+  return String.fromCodePoint(base + firstCode, base + secondCode);
 }
 
 export const selectCountries = createSelector(selectEnrichedMatches, (matches): CountryItem[] => {
@@ -138,7 +166,12 @@ export const selectCountries = createSelector(selectEnrichedMatches, (matches): 
     if (existing) {
       map.set(m.RegionID, { ...existing, matchCount: existing.matchCount + 1 });
     } else {
-      map.set(m.RegionID, { regionId: m.RegionID, regionName: m.regionName, matchCount: 1 });
+      map.set(m.RegionID, {
+        regionId: m.RegionID,
+        regionName: m.regionName,
+        matchCount: 1,
+        flagEmoji: toFlagEmoji(m.CountryID),
+      });
     }
   }
   return [...map.values()].sort((a, b) => a.regionName.localeCompare(b.regionName));

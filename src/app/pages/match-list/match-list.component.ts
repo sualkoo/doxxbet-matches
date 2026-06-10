@@ -16,7 +16,7 @@ import { MatchesActions } from '../../store/matches/matches.actions';
 import {
   selectGroupedMatches,
   selectStatus,
-  selectCurrentHighlightedOddValue,
+  selectHighlightLevel,
   LeagueGroup,
 } from '../../store/matches/matches.selectors';
 import { MatchesSidenavComponent } from '../../components/matches-sidenav/matches-sidenav.component';
@@ -52,8 +52,8 @@ export class MatchListComponent implements OnInit {
   sportName = computed(() => this.groups()[0]?.sportName ?? '');
 
   status = toSignal(this.store.select(selectStatus), { initialValue: 'idle' as const });
-  highlightedOdd = toSignal(this.store.select(selectCurrentHighlightedOddValue), {
-    initialValue: null,
+  private readonly highlightLevel = toSignal(this.store.select(selectHighlightLevel), {
+    initialValue: 0,
   });
 
   selectedRegionId = signal<number | null>(null);
@@ -65,12 +65,38 @@ export class MatchListComponent implements OnInit {
     return allLeagues.filter((l) => l.matches.some((m) => m.RegionID === regionId));
   });
 
-  selectCountry(regionId: number): void {
+  private readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
+    const allValues = this.visibleLeagues().flatMap((league) =>
+      league.matches.flatMap((m) =>
+        [m.odds.home, m.odds.draw, m.odds.away, m.odds.homeOrDraw, m.odds.drawOrAway].filter(
+          (v): v is number => v !== null,
+        ),
+      ),
+    );
+    return [...new Set(allValues)].sort((a, b) => b - a);
+  });
+
+  highlightedOdd = computed<number | null>(() => {
+    const sortedValues = this.visibleSortedUniqueOddValues();
+    if (sortedValues.length === 0) return null;
+
+    const level = this.highlightLevel();
+    const len = sortedValues.length;
+    return sortedValues[((level % len) + len) % len];
+  });
+
+  selectCountry(regionId: number | null): void {
+    if (regionId === null) {
+      this.selectedRegionId.set(null);
+      return;
+    }
     this.selectedRegionId.update((current) => (current === regionId ? null : regionId));
   }
 
   ngOnInit(): void {
-    this.store.dispatch(MatchesActions.loadMatches());
+    if (this.status() === 'idle') {
+      this.store.dispatch(MatchesActions.loadMatches());
+    }
   }
 
   cycleHighlightNext(): void {

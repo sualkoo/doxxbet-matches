@@ -1,6 +1,0 @@
-<section>
-  <h2>{{ sportGroup().sportName }}</h2>
-  @for (league of sportGroup().leagues; track league.leagueId) {
-    <app-league-section [league]="league" [highlightedOdd]="highlightedOdd()" />
-  }
-</section>

@@ -26,18 +26,6 @@ export const matchesReducer = createReducer(
     error,
   })),
 
-  on(MatchesActions.toggleLeague, (state, { leagueId }) => ({
-    ...state,
-    collapsedLeagues: state.collapsedLeagues.includes(leagueId)
-      ? state.collapsedLeagues.filter((id) => id !== leagueId)
-      : [...state.collapsedLeagues, leagueId],
-  })),
-
-  on(MatchesActions.cycleOddHighlight, (state) => ({
-    ...state,
-    highlightLevel: state.highlightLevel + 1,
-  })),
-
   on(MatchesActions.stepOddHighlight, (state, { direction }) => ({
     ...state,
     highlightLevel: state.highlightLevel + direction,

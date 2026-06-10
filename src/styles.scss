@@ -69,22 +69,6 @@ tr:hover td {
   transition: background 200ms ease;
 }
 
-.sport--football {
-  color: #ef4444;
-}
-.sport--tennis {
-  color: #f87171;
-}
-.sport--basketball {
-  color: #dc2626;
-}
-.sport--hockey {
-  color: #fca5a5;
-}
-.sport--default {
-  color: #9ca3af;
-}
-
 @media (max-width: 768px) {
   .table-wrapper {
     overflow-x: auto;

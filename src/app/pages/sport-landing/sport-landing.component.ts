@@ -78,7 +78,9 @@ export class SportLandingComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.store.dispatch(MatchesActions.loadMatches());
+    if (this.status() === 'idle') {
+      this.store.dispatch(MatchesActions.loadMatches());
+    }
   }
 
   selectSport(sportId: number | null): void {

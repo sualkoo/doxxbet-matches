@@ -36,9 +36,4 @@ export class MatchesSidenavComponent {
   toggleSidenav(): void {
     this.sidenavOpen.update((v) => !v);
   }
-
-  selectCountry(regionId: number): void {
-    const current = this.selectedRegionId();
-    this.countrySelected.emit(current === regionId ? null : regionId);
-  }
 }

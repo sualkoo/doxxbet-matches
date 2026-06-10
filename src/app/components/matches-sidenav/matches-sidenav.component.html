@@ -13,9 +13,12 @@
         @for (country of countries(); track country.regionId) {
           <mat-list-item
             [class.active]="selectedRegionId() === country.regionId"
-            (click)="selectCountry(country.regionId)"
-            (keydown.enter)="selectCountry(country.regionId)"
+            (click)="countrySelected.emit(country.regionId)"
+            (keydown.enter)="countrySelected.emit(country.regionId)"
           >
+            @if (country.flagEmoji) {
+              <span class="country-flag" aria-hidden="true">{{ country.flagEmoji }}</span>
+            }
             {{ country.regionName }}
             <span class="match-count">{{ country.matchCount }}</span>
           </mat-list-item>
@@ -38,5 +41,6 @@
     @for (league of visibleLeagues(); track league.leagueId) {
       <app-league-section [league]="league" [highlightedOdd]="highlightedOdd()" />
     }
+    <div class="league-list-bottom-spacer" aria-hidden="true"></div>
   </mat-sidenav-content>
 </mat-sidenav-container>

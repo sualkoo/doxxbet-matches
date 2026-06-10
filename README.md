@@ -43,27 +43,29 @@ loadMatches  HTTP   state    enriched     renders
              call   update   matches      table
 ```
 
-- **Actions** (`matches.actions.ts`): `loadMatches`, `loadMatchesSuccess`, `loadMatchesFailure`, `toggleLeague`, `cycleOddHighlight`
+- **Actions** (`matches.actions.ts`): `loadMatches`, `loadMatchesSuccess`, `loadMatchesFailure`, `stepOddHighlight`
 - **Effects** (`matches.effects.ts`): Listens for `loadMatches`, calls `MatchesService`, dispatches success/failure
 - **Reducer** (`matches.reducer.ts`): Updates state based on actions
-- **Selectors** (`matches.selectors.ts`): `selectEnrichedMatches`, `selectGroupedMatches`, `selectCurrentHighlightedOddValue`
-- **Components**: `MatchListComponent` → `SportSectionComponent` → `LeagueSectionComponent` → `MatchRowComponent` → `OddCellComponent`
+- **Selectors** (`matches.selectors.ts`): `selectEnrichedMatches`, `selectGroupedMatches`, `selectSports`, `selectCountries`
+- **Components**: `MatchListComponent` → `MatchesSidenavComponent` → `LeagueSectionComponent` → `MatchRowComponent` → `OddCellComponent`
 
 ## Highlight Feature
 
-Clicking "Highlight Odds" dispatches `cycleOddHighlight`. The selector `selectCurrentHighlightedOddValue` computes the current value as:
+The toolbar's highlight buttons dispatch `stepOddHighlight({ direction })`, which increments or decrements a shared `highlightLevel` counter in the store. `MatchListComponent` computes the highlighted value from the currently visible (country-filtered) leagues:
 
 ```
-sortedUniqueOddValues[highlightLevel % sortedUniqueOddValues.length]
+sortedUniqueOddValues[((highlightLevel % len) + len) % len]
 ```
+
+(The modulo wrapping handles both forward and backward stepping.)
 
 For example, with values `[2.53, 2.30, 1.54, 1.01]`:
 
-- Click 1 → highlights **2.53**
-- Click 2 → highlights **2.30**
-- Click 3 → highlights **1.54**
-- Click 4 → highlights **1.01**
-- Click 5 → wraps back to **2.53**
+- Step 1 → highlights **2.53**
+- Step 2 → highlights **2.30**
+- Step 3 → highlights **1.54**
+- Step 4 → highlights **1.01**
+- Step 5 → wraps back to **2.53**
 
 All `OddCellComponent` cells with a matching value get the amber highlight simultaneously.
 

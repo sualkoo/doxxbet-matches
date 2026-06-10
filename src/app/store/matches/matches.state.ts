@@ -6,7 +6,6 @@ export interface MatchesState {
   readonly labels: Readonly<Record<string, ApiLabel>>;
   readonly status: 'idle' | 'loading' | 'success' | 'error';
   readonly error: string | null;
-  readonly collapsedLeagues: readonly string[];
   readonly highlightLevel: number;
 }
 
@@ -16,6 +15,5 @@ export const initialMatchesState: MatchesState = {
   labels: {},
   status: 'idle',
   error: null,
-  collapsedLeagues: [],
   highlightLevel: 0,
 };
