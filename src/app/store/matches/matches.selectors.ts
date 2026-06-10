@@ -110,23 +110,96 @@ export interface CountryItem {
   regionId: number;
   regionName: string;
   matchCount: number;
-  flagEmoji: string | null;
+  /** ISO 3166-1 alpha-2 country code (lowercase), used to build a flag image URL. Null when unknown. */
+  flagCode: string | null;
 }
 
+// FIFA / IOC three-letter codes → ISO 3166-1 alpha-2 (lowercase).
 const COUNTRY_ID_TO_ALPHA2: Readonly<Record<string, string>> = {
+  ALB: 'al',
+  ALG: 'dz',
+  AND: 'ad',
+  ANG: 'ao',
   ARG: 'ar',
+  ARM: 'am',
   AUS: 'au',
+  AUT: 'at',
+  AZE: 'az',
+  BEL: 'be',
+  BIH: 'ba',
+  BLR: 'by',
+  BOL: 'bo',
   BRA: 'br',
   BUL: 'bg',
+  CAN: 'ca',
+  CHI: 'cl',
+  CHN: 'cn',
+  CMR: 'cm',
+  COL: 'co',
+  CRC: 'cr',
+  CRO: 'hr',
   CYP: 'cy',
   CZE: 'cz',
   DEN: 'dk',
+  ECU: 'ec',
+  EGY: 'eg',
   ENG: 'gb',
   ESP: 'es',
+  EST: 'ee',
+  FIN: 'fi',
   FRA: 'fr',
+  GEO: 'ge',
+  GER: 'de',
   GRE: 'gr',
+  HUN: 'hu',
   INA: 'id',
+  IND: 'in',
+  IRL: 'ie',
+  IRN: 'ir',
+  ISL: 'is',
+  ISR: 'il',
   ITA: 'it',
+  JPN: 'jp',
+  KAZ: 'kz',
+  KOR: 'kr',
+  KSA: 'sa',
+  LAT: 'lv',
+  LTU: 'lt',
+  LUX: 'lu',
+  MAR: 'ma',
+  MEX: 'mx',
+  MKD: 'mk',
+  MLT: 'mt',
+  MNE: 'me',
+  NED: 'nl',
+  NGA: 'ng',
+  NIR: 'gb',
+  NOR: 'no',
+  NZL: 'nz',
+  PAR: 'py',
+  PER: 'pe',
+  POL: 'pl',
+  POR: 'pt',
+  QAT: 'qa',
+  ROU: 'ro',
+  RSA: 'za',
+  RUS: 'ru',
+  SCO: 'gb',
+  SRB: 'rs',
+  SVK: 'sk',
+  SVN: 'si',
+  SWE: 'se',
+  SUI: 'ch',
+  THA: 'th',
+  TUN: 'tn',
+  TUR: 'tr',
+  UAE: 'ae',
+  UKR: 'ua',
+  URU: 'uy',
+  USA: 'us',
+  UZB: 'uz',
+  VEN: 've',
+  WAL: 'gb',
 };
 
 function toAlpha2(countryId: string | undefined): string | null {
@@ -141,24 +214,6 @@ function toAlpha2(countryId: string | undefined): string | null {
   return COUNTRY_ID_TO_ALPHA2[normalized] ?? null;
 }
 
-function toFlagEmoji(countryId: string | undefined): string | null {
-  const alpha2 = toAlpha2(countryId);
-  if (!alpha2) return null;
-
-  const [first, second] = alpha2.toUpperCase();
-  if (!first || !second) return null;
-
-  const base = 0x1f1e6;
-  const firstCode = first.charCodeAt(0) - 65;
-  const secondCode = second.charCodeAt(0) - 65;
-
-  if (firstCode < 0 || firstCode > 25 || secondCode < 0 || secondCode > 25) {
-    return null;
-  }
-
-  return String.fromCodePoint(base + firstCode, base + secondCode);
-}
-
 export const selectCountries = createSelector(selectEnrichedMatches, (matches): CountryItem[] => {
   const map = new Map<number, CountryItem>();
   for (const m of matches) {
@@ -170,7 +225,7 @@ export const selectCountries = createSelector(selectEnrichedMatches, (matches): 
         regionId: m.RegionID,
         regionName: m.regionName,
         matchCount: 1,
-        flagEmoji: toFlagEmoji(m.CountryID),
+        flagCode: toAlpha2(m.CountryID),
       });
     }
   }

@@ -1,4 +1,7 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container
+  class="sidenav-container"
+  [class.sidenav-container--collapsed]="!sidenavOpen()"
+>
   <mat-sidenav mode="side" opened [class.sidenav--collapsed]="!sidenavOpen()" class="sidenav">
     <div class="sidenav-body">
       <span class="sidenav-label">Countries</span>
@@ -8,7 +11,10 @@
           (click)="countrySelected.emit(null)"
           (keydown.enter)="countrySelected.emit(null)"
         >
-          All Countries
+          <span class="country-flag country-flag--all" aria-hidden="true">
+            <mat-icon>public</mat-icon>
+          </span>
+          <span class="country-name">All Countries</span>
         </mat-list-item>
         @for (country of countries(); track country.regionId) {
           <mat-list-item
@@ -16,10 +22,22 @@
             (click)="countrySelected.emit(country.regionId)"
             (keydown.enter)="countrySelected.emit(country.regionId)"
           >
-            @if (country.flagEmoji) {
-              <span class="country-flag" aria-hidden="true">{{ country.flagEmoji }}</span>
-            }
-            {{ country.regionName }}
+            <span class="country-flag" aria-hidden="true">
+              @if (country.flagCode) {
+                <img
+                  class="country-flag__img"
+                  [src]="'https://flagcdn.com/32x24/' + country.flagCode + '.png'"
+                  [srcset]="'https://flagcdn.com/64x48/' + country.flagCode + '.png 2x'"
+                  width="22"
+                  height="16"
+                  loading="lazy"
+                  [alt]="country.regionName + ' flag'"
+                />
+              } @else {
+                <mat-icon class="country-flag__fallback">flag</mat-icon>
+              }
+            </span>
+            <span class="country-name">{{ country.regionName }}</span>
             <span class="match-count">{{ country.matchCount }}</span>
           </mat-list-item>
         }

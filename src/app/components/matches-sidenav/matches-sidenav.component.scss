@@ -2,14 +2,30 @@
 
 .sidenav-container {
   height: calc(100vh - 64px);
+  // Match the main content background so the collapsed-state right gutter blends in
+  background: #f1f5f9;
+}
+
+// Remove rounded corners across the entire sidenav component
+:host ::ng-deep {
+  .mat-drawer-container,
+  .mat-drawer,
+  .mat-drawer-content,
+  .mat-drawer-inner-container,
+  .mat-mdc-list-item,
+  .mat-mdc-list-item-interactive,
+  .mat-mdc-button-base,
+  .mat-ripple {
+    border-radius: 0 !important;
+  }
 }
 
 // ─── Sidenav panel ────────────────────────────────────────────────────────────
 
 .sidenav {
   width: 260px;
-  background: #1c1c1c;
-  border-right: 1px solid #2e2e2e !important;
+  background: #2a2a2a;
+  border-right: 1px solid #3a3a3a !important;
   overflow: hidden;
   transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -21,12 +37,24 @@
     overflow: hidden;
   }
 
+  // Collapsed: keep the country flags visible, hide only the text labels.
   &--collapsed {
-    width: 48px;
+    width: 80px;
 
-    .sidenav-body {
-      opacity: 0;
-      pointer-events: none;
+    // Fully remove labels so no clipped text / ellipsis dots remain
+    .sidenav-label,
+    .country-name,
+    .match-count {
+      display: none;
+    }
+
+    mat-list-item {
+      padding-left: 16px !important;
+      justify-content: flex-start;
+    }
+
+    .country-flag {
+      margin-right: 0;
     }
 
     .sidenav-footer {
@@ -63,14 +91,31 @@ mat-list-item {
   color: #9ca3af;
   padding-left: 8px !important;
   border-left: 3px solid transparent;
+  border-radius: 0 !important;
   transition:
     color 150ms ease,
     background 150ms ease,
     border-color 150ms ease;
 
+  // Square off Material's rounded ripple / state layers
+  ::ng-deep .mat-mdc-list-item-ripple,
+  ::ng-deep .mdc-list-item__primary-text,
+  ::ng-deep .mat-ripple {
+    border-radius: 0 !important;
+  }
+
   &:hover {
-    color: #e5e5e5;
-    background: rgba(255, 255, 255, 0.05);
+    color: #f3f4f6;
+    background: rgba(239, 68, 68, 0.1);
+    border-left-color: rgba(239, 68, 68, 0.5);
+
+    .country-flag__img {
+      box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.6);
+    }
+
+    .match-count {
+      color: #e5e7eb;
+    }
   }
 
   &.active {
@@ -81,37 +126,64 @@ mat-list-item {
   }
 }
 
+.country-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 150ms ease;
+}
+
 .match-count {
   margin-left: auto;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: #9ca3af;
   padding: 0 4px;
+  transition: opacity 150ms ease;
 }
 
 .country-flag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.1rem;
-  margin-right: 0.5rem;
-  font-size: 0.9rem;
+  width: 22px;
+  height: 16px;
+  margin-right: 0.6rem;
   line-height: 1;
   flex-shrink: 0;
+}
+
+.country-flag__img {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 150ms ease;
+}
+
+.country-flag__fallback,
+.country-flag--all mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  color: #9ca3af;
 }
 
 // ─── Fixed footer with toggle ─────────────────────────────────────────────────
 
 .sidenav-footer {
   flex-shrink: 0;
-  border-top: 1px solid #2e2e2e;
+  border-top: 1px solid #3a3a3a;
   padding: 6px;
   display: flex;
   justify-content: flex-end;
-  background: #1c1c1c;
+  background: #2a2a2a;
 }
 
 .sidenav-toggle-btn {
   color: #9ca3af;
+  border-radius: 0;
   transition:
     color 150ms ease,
     background 150ms ease;
@@ -119,6 +191,11 @@ mat-list-item {
   &:hover {
     color: #e5e5e5;
     background: rgba(255, 255, 255, 0.06);
+  }
+
+  ::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep .mat-ripple {
+    border-radius: 0 !important;
   }
 }
 
@@ -128,6 +205,15 @@ mat-list-item {
   padding: 16px;
   overflow: auto;
   background: #f1f5f9;
+  // Material sets an inline margin-left equal to the drawer width; animate it so
+  // the main table expands/contracts in sync with the sidenav collapse.
+  transition: margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+// When the sidenav is collapsed, pull the content margin in to the narrow width
+// (plus a small gutter) so the main table reclaims the freed horizontal space.
+.sidenav-container--collapsed .sidenav-content {
+  margin-left: 80px !important;
 }
 
 .league-list-bottom-spacer {
