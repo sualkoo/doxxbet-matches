@@ -1,0 +1,11 @@
+<mat-toolbar>
+  <button mat-icon-button (click)="back.emit()" aria-label="Back to sports">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span class="toolbar-title">{{ sportName() || 'Matches' }}</span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" (click)="cycleHighlight.emit()">Highlight Odds</button>
+  @if (highlightedOdd() !== null) {
+    <span class="highlight-value">{{ highlightedOdd()! | number: '1.2-2' }}</span>
+  }
+</mat-toolbar>

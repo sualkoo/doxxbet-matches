@@ -1,14 +1,9 @@
-<mat-toolbar>
-  <button mat-icon-button (click)="goBack()" aria-label="Back to sports">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <span>{{ sportName() || 'Matches' }}</span>
-  <span class="spacer"></span>
-  <button mat-raised-button color="accent" (click)="cycleHighlight()">Highlight Odds</button>
-  @if (highlightedOdd() !== null) {
-    <span class="highlight-value">{{ highlightedOdd() | number: '1.2-2' }}</span>
-  }
-</mat-toolbar>
+<app-matches-toolbar
+  [sportName]="sportName()"
+  [highlightedOdd]="highlightedOdd()"
+  (back)="goBack()"
+  (cycleHighlight)="cycleHighlight()"
+/>
 
 @if (status() === 'loading') {
   <mat-progress-bar mode="indeterminate" />
@@ -30,34 +25,11 @@
       </mat-card-content>
     </mat-card>
   } @else {
-    <mat-sidenav-container class="sidenav-container">
-      <mat-sidenav mode="side" opened class="sidenav">
-        <mat-nav-list>
-          <mat-list-item
-            [class.active]="selectedRegionId() === null"
-            (click)="selectedRegionId.set(null)"
-            (keydown.enter)="selectedRegionId.set(null)"
-          >
-            All Countries
-          </mat-list-item>
-          @for (country of countries(); track country.regionId) {
-            <mat-list-item
-              [class.active]="selectedRegionId() === country.regionId"
-              (click)="selectCountry(country.regionId)"
-              (keydown.enter)="selectCountry(country.regionId)"
-            >
-              {{ country.regionName }}
-              <span class="match-count">{{ country.matchCount }}</span>
-            </mat-list-item>
-          }
-        </mat-nav-list>
-      </mat-sidenav>
-
-      <mat-sidenav-content class="sidenav-content">
-        @for (league of visibleLeagues(); track league.leagueId) {
-          <app-league-section [league]="league" [highlightedOdd]="highlightedOdd()" />
-        }
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+    <app-matches-sidenav
+      [selectedRegionId]="selectedRegionId()"
+      [visibleLeagues]="visibleLeagues()"
+      [highlightedOdd]="highlightedOdd()"
+      (countrySelected)="selectedRegionId.set($event)"
+    />
   }
 }

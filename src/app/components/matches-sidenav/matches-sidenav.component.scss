@@ -1,0 +1,120 @@
+// ─── Container ────────────────────────────────────────────────────────────────
+
+.sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+// ─── Sidenav panel ────────────────────────────────────────────────────────────
+
+.sidenav {
+  width: 260px;
+  background: #1c1c1c;
+  border-right: 1px solid #2e2e2e !important;
+  overflow: hidden;
+  transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Pierce Angular Material's inner wrapper to enable flex column layout
+  ::ng-deep .mat-drawer-inner-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  &--collapsed {
+    width: 48px;
+
+    .sidenav-body {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sidenav-footer {
+      justify-content: center;
+    }
+  }
+}
+
+// ─── Scrollable body ──────────────────────────────────────────────────────────
+
+.sidenav-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+
+.sidenav-label {
+  display: block;
+  padding: 16px 16px 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+}
+
+// ─── Country list ─────────────────────────────────────────────────────────────
+
+mat-list-item {
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  padding-left: 8px !important;
+  border-left: 3px solid transparent;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+
+  &:hover {
+    color: #e5e5e5;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.active {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+    border-left-color: #ef4444;
+    font-weight: 600;
+  }
+}
+
+.match-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding: 0 4px;
+}
+
+// ─── Fixed footer with toggle ─────────────────────────────────────────────────
+
+.sidenav-footer {
+  flex-shrink: 0;
+  border-top: 1px solid #2e2e2e;
+  padding: 6px;
+  display: flex;
+  justify-content: flex-end;
+  background: #1c1c1c;
+}
+
+.sidenav-toggle-btn {
+  color: #9ca3af;
+  transition:
+    color 150ms ease,
+    background 150ms ease;
+
+  &:hover {
+    color: #e5e5e5;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+// ─── Main content area ────────────────────────────────────────────────────────
+
+.sidenav-content {
+  padding: 16px;
+  overflow: auto;
+  background: #f1f5f9;
+}

@@ -10,41 +10,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { DecimalPipe } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 import { MatchesActions } from '../../store/matches/matches.actions';
 import {
   selectGroupedMatches,
   selectStatus,
   selectCurrentHighlightedOddValue,
-  selectCountries,
   LeagueGroup,
 } from '../../store/matches/matches.selectors';
-import { LeagueSectionComponent } from '../../components/league-section/league-section.component';
-import { SportColorPipe } from '../../shared/pipes/sport-color.pipe';
+import { MatchesSidenavComponent } from '../../components/matches-sidenav/matches-sidenav.component';
+import { MatchesToolbarComponent } from '../../components/matches-toolbar/matches-toolbar.component';
 
 @Component({
   selector: 'app-match-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatProgressBarModule,
-    MatCardModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    DecimalPipe,
-    LeagueSectionComponent,
-    SportColorPipe,
-  ],
+  imports: [MatProgressBarModule, MatCardModule, MatchesToolbarComponent, MatchesSidenavComponent],
   templateUrl: './match-list.component.html',
   styleUrl: './match-list.component.scss',
 })
@@ -73,7 +55,6 @@ export class MatchListComponent implements OnInit {
   highlightedOdd = toSignal(this.store.select(selectCurrentHighlightedOddValue), {
     initialValue: null,
   });
-  countries = toSignal(this.store.select(selectCountries), { initialValue: [] });
 
   selectedRegionId = signal<number | null>(null);
 

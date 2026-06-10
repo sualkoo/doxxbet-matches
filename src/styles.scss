@@ -39,23 +39,25 @@ table {
 }
 
 th {
-  background: #1c1c1c;
+  background: #f8fafc;
   text-align: left;
   padding: 8px 12px;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #9ca3af;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 td {
   padding: 6px 12px;
-  border-bottom: 1px solid #2e2e2e;
+  border-bottom: 1px solid #f1f5f9;
   font-size: 0.875rem;
+  color: #334155;
 }
 
 tr:hover td {
-  background: #1c1c1c;
+  background: #f8fafc;
 }
 
 .odd--highlighted {

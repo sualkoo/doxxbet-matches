@@ -1,0 +1,42 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" opened [class.sidenav--collapsed]="!sidenavOpen()" class="sidenav">
+    <div class="sidenav-body">
+      <span class="sidenav-label">Countries</span>
+      <mat-nav-list>
+        <mat-list-item
+          [class.active]="selectedRegionId() === null"
+          (click)="countrySelected.emit(null)"
+          (keydown.enter)="countrySelected.emit(null)"
+        >
+          All Countries
+        </mat-list-item>
+        @for (country of countries(); track country.regionId) {
+          <mat-list-item
+            [class.active]="selectedRegionId() === country.regionId"
+            (click)="selectCountry(country.regionId)"
+            (keydown.enter)="selectCountry(country.regionId)"
+          >
+            {{ country.regionName }}
+            <span class="match-count">{{ country.matchCount }}</span>
+          </mat-list-item>
+        }
+      </mat-nav-list>
+    </div>
+    <div class="sidenav-footer">
+      <button
+        mat-icon-button
+        class="sidenav-toggle-btn"
+        (click)="toggleSidenav()"
+        [attr.aria-label]="sidenavOpen() ? 'Collapse sidebar' : 'Expand sidebar'"
+      >
+        <mat-icon>{{ sidenavOpen() ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidenav-content">
+    @for (league of visibleLeagues(); track league.leagueId) {
+      <app-league-section [league]="league" [highlightedOdd]="highlightedOdd()" />
+    }
+  </mat-sidenav-content>
+</mat-sidenav-container>
