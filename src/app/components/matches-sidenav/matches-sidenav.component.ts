@@ -28,6 +28,8 @@ export class MatchesSidenavComponent {
   readonly selectedRegionId = input<number | null>(null);
   readonly visibleLeagues = input.required<LeagueGroup[]>();
   readonly highlightedOdd = input<number | null>(null);
+  readonly collapseAllToken = input(0);
+  readonly allVisibleLeaguesCollapsed = input(false);
   readonly countrySelected = output<number | null>();
 
   readonly countries = toSignal(this.store.select(selectCountries), { initialValue: [] });

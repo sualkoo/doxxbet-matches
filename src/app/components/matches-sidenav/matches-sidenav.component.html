@@ -57,7 +57,12 @@
 
   <mat-sidenav-content class="sidenav-content">
     @for (league of visibleLeagues(); track league.leagueId) {
-      <app-league-section [league]="league" [highlightedOdd]="highlightedOdd()" />
+      <app-league-section
+        [league]="league"
+        [highlightedOdd]="highlightedOdd()"
+        [collapseAllToken]="collapseAllToken()"
+        [allVisibleLeaguesCollapsed]="allVisibleLeaguesCollapsed()"
+      />
     }
     <div class="league-list-bottom-spacer" aria-hidden="true"></div>
   </mat-sidenav-content>

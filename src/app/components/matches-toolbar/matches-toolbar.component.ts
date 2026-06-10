@@ -15,8 +15,10 @@ import { MatIconModule } from '@angular/material/icon';
 export class MatchesToolbarComponent {
   readonly sportName = input('');
   readonly highlightedOdd = input<number | null>(null);
+  readonly allLeaguesCollapsed = input(false);
 
   readonly back = output<void>();
+  readonly toggleAllLeagues = output<void>();
   readonly cycleHighlight = output<void>();
   readonly cyclePrev = output<void>();
 }

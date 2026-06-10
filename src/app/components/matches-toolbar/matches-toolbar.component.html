@@ -33,5 +33,14 @@
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
+
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="toggleAllLeagues.emit()"
+      [attr.aria-label]="allLeaguesCollapsed() ? 'Expand all leagues' : 'Collapse all leagues'"
+    >
+      {{ allLeaguesCollapsed() ? 'Expand all' : 'Collapse all' }}
+    </button>
   </div>
 </mat-toolbar>

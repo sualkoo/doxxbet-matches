@@ -57,6 +57,8 @@ export class MatchListComponent implements OnInit {
   });
 
   selectedRegionId = signal<number | null>(null);
+  collapseAllToken = signal(0);
+  allVisibleLeaguesCollapsed = signal(false);
 
   visibleLeagues = computed<LeagueGroup[]>(() => {
     const regionId = this.selectedRegionId();
@@ -105,6 +107,11 @@ export class MatchListComponent implements OnInit {
 
   cycleHighlightPrev(): void {
     this.store.dispatch(MatchesActions.stepOddHighlight({ direction: -1 }));
+  }
+
+  toggleAllVisibleLeagues(): void {
+    this.allVisibleLeaguesCollapsed.update((v) => !v);
+    this.collapseAllToken.update((v) => v + 1);
   }
 
   retry(): void {

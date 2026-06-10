@@ -21,7 +21,7 @@ export interface DisplaySport {
  * Add entries here as IDs are discovered.
  */
 const SPORT_ID_MAP: ReadonlyMap<string, number> = new Map<string, number>([
-  ['Football', 54],
+  ['Soccer', 54],
   ['Tennis', 13],
   ['Basketball', 3],
   ['Ice Hockey', 5],

@@ -25,17 +25,29 @@
   text-align: center;
   padding: 80px 16px 64px;
 
+  .landing-eyebrow {
+    margin: 0 0 16px;
+    color: #6b7280;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
   .landing-title {
     margin: 0 0 16px;
     font-size: 9rem;
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 48px rgba(239, 68, 68, 0.4));
+    color: #ffffff;
+
+    .landing-title__accent {
+      background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 48px rgba(239, 68, 68, 0.4));
+    }
   }
 
   .landing-subtitle {
