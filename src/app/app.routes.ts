@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: 'matches/:sportId',
     loadComponent: () =>
-      import('./components/match-list/match-list.component').then((m) => m.MatchListComponent),
+      import('./pages/match-list/match-list.component').then((m) => m.MatchListComponent),
   },
   { path: '**', redirectTo: '' },
 ];

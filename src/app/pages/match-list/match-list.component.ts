@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -9,13 +16,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 import { MatchesActions } from '../../store/matches/matches.actions';
 import {
   selectGroupedMatches,
   selectStatus,
   selectCurrentHighlightedOddValue,
+  selectCountries,
+  LeagueGroup,
 } from '../../store/matches/matches.selectors';
-import { SportSectionComponent } from '../sport-section/sport-section.component';
+import { LeagueSectionComponent } from '../../components/league-section/league-section.component';
+import { SportColorPipe } from '../../shared/pipes/sport-color.pipe';
 
 @Component({
   selector: 'app-match-list',
@@ -27,8 +39,11 @@ import { SportSectionComponent } from '../sport-section/sport-section.component'
     MatProgressBarModule,
     MatCardModule,
     MatIconModule,
+    MatSidenavModule,
+    MatListModule,
     DecimalPipe,
-    SportSectionComponent,
+    LeagueSectionComponent,
+    SportColorPipe,
   ],
   templateUrl: './match-list.component.html',
   styleUrl: './match-list.component.scss',
@@ -40,7 +55,7 @@ export class MatchListComponent implements OnInit {
 
   private readonly routeSportId = toSignal(
     this.route.paramMap.pipe(map((p) => Number(p.get('sportId')) || null)),
-    { initialValue: null as number | null },
+    { initialValue: null },
   );
 
   private readonly allGroups = toSignal(this.store.select(selectGroupedMatches), {
@@ -58,6 +73,20 @@ export class MatchListComponent implements OnInit {
   highlightedOdd = toSignal(this.store.select(selectCurrentHighlightedOddValue), {
     initialValue: null,
   });
+  countries = toSignal(this.store.select(selectCountries), { initialValue: [] });
+
+  selectedRegionId = signal<number | null>(null);
+
+  visibleLeagues = computed<LeagueGroup[]>(() => {
+    const regionId = this.selectedRegionId();
+    const allLeagues = this.groups().flatMap((s) => s.leagues);
+    if (regionId === null) return allLeagues;
+    return allLeagues.filter((l) => l.matches.some((m) => m.RegionID === regionId));
+  });
+
+  selectCountry(regionId: number): void {
+    this.selectedRegionId.update((current) => (current === regionId ? null : regionId));
+  }
 
   ngOnInit(): void {
     this.store.dispatch(MatchesActions.loadMatches());

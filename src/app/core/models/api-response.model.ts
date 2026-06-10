@@ -44,8 +44,16 @@ export interface ApiOdd {
   readonly PlayerID: number;
 }
 
+export interface ApiLabel {
+  readonly Typ: string;
+  readonly ID: number;
+  readonly LanguageID: string;
+  readonly Name: string;
+  readonly CountryID?: string;
+}
+
 export interface ApiResponse {
   readonly EventChanceTypes: readonly ApiMatch[];
   readonly Odds: Readonly<Record<string, ApiOdd>>;
-  readonly Labels?: Readonly<Record<string, string>>;
+  readonly Labels?: Readonly<Record<string, ApiLabel>>;
 }

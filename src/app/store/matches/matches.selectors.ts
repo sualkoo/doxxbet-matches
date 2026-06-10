@@ -35,9 +35,9 @@ export const selectEnrichedMatches = createSelector(
 
       return {
         ...match,
-        sportName: String(labels['SP_' + match.SportID] ?? 'Unknown'),
-        regionName: String(labels['RE_' + match.RegionID] ?? 'Unknown'),
-        leagueName: String(labels['LC_' + match.LeagueCupID] ?? 'Unknown'),
+        sportName: labels['SP_' + match.SportID]?.Name ?? 'Unknown',
+        regionName: labels['RE_' + match.RegionID]?.Name ?? 'Unknown',
+        leagueName: labels['LC_' + match.LeagueCupID]?.Name ?? 'Unknown',
         odds: enrichedOdds,
       };
     }),
@@ -121,3 +121,24 @@ export const selectSports = createSelector(
       matchCount: g.leagues.reduce((sum, l) => sum + l.matches.length, 0),
     })),
 );
+
+// ─── Countries list ───────────────────────────────────────────────────────────
+
+export interface CountryItem {
+  regionId: number;
+  regionName: string;
+  matchCount: number;
+}
+
+export const selectCountries = createSelector(selectEnrichedMatches, (matches): CountryItem[] => {
+  const map = new Map<number, CountryItem>();
+  for (const m of matches) {
+    const existing = map.get(m.RegionID);
+    if (existing) {
+      map.set(m.RegionID, { ...existing, matchCount: existing.matchCount + 1 });
+    } else {
+      map.set(m.RegionID, { regionId: m.RegionID, regionName: m.regionName, matchCount: 1 });
+    }
+  }
+  return [...map.values()].sort((a, b) => a.regionName.localeCompare(b.regionName));
+});

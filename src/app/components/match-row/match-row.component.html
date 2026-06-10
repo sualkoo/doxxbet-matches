@@ -3,8 +3,8 @@
 <td>{{ match().sportName }}</td>
 <td>{{ match().regionName }}</td>
 <td>{{ match().leagueName }}</td>
-<app-odd-cell [value]="match().odds.home" [highlightedOdd]="highlightedOdd()" />
-<app-odd-cell [value]="match().odds.draw" [highlightedOdd]="highlightedOdd()" />
-<app-odd-cell [value]="match().odds.away" [highlightedOdd]="highlightedOdd()" />
-<app-odd-cell [value]="match().odds.homeOrDraw" [highlightedOdd]="highlightedOdd()" />
-<app-odd-cell [value]="match().odds.drawOrAway" [highlightedOdd]="highlightedOdd()" />
+<td app-odd-cell [value]="match().odds.home" [highlightedOdd]="highlightedOdd()"></td>
+<td app-odd-cell [value]="match().odds.draw" [highlightedOdd]="highlightedOdd()"></td>
+<td app-odd-cell [value]="match().odds.away" [highlightedOdd]="highlightedOdd()"></td>
+<td app-odd-cell [value]="match().odds.homeOrDraw" [highlightedOdd]="highlightedOdd()"></td>
+<td app-odd-cell [value]="match().odds.drawOrAway" [highlightedOdd]="highlightedOdd()"></td>
