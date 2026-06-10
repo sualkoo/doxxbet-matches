@@ -3,13 +3,13 @@ import {
   Component,
   computed,
   inject,
+  input,
   OnInit,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatchesActions } from '../../store/matches/matches.actions';
@@ -32,13 +32,11 @@ import { MatchesToolbarComponent } from '../../components/matches-toolbar/matche
 })
 export class MatchListComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private readonly routeSportId = toSignal(
-    this.route.paramMap.pipe(map((p) => Number(p.get('sportId')) || null)),
-    { initialValue: null },
-  );
+  /** Bound from the `:sportId` route param via withComponentInputBinding(). */
+  readonly sportId = input<string>();
+  private readonly routeSportId = computed(() => Number(this.sportId()) || null);
 
   private readonly allGroups = toSignal(this.store.select(selectGroupedMatches), {
     initialValue: [],

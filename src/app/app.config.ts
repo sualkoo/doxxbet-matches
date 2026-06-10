@@ -4,7 +4,12 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+  PreloadAllModules,
+} from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -20,10 +25,10 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideHttpClient(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
     provideStore({ matches: matchesReducer }),
     provideEffects([{ loadMatchesEffect }]),
-    provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
+    ...(environment.production ? [] : [provideStoreDevtools({ maxAge: 25 })]),
     DatePipe,
     { provide: ENVIRONMENT, useValue: environment },
   ],
