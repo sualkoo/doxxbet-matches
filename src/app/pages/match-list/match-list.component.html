@@ -2,7 +2,8 @@
   [sportName]="sportName()"
   [highlightedOdd]="highlightedOdd()"
   (back)="goBack()"
-  (cycleHighlight)="cycleHighlight()"
+  (cycleHighlight)="cycleHighlightNext()"
+  (cyclePrev)="cycleHighlightPrev()"
 />
 
 @if (status() === 'loading') {

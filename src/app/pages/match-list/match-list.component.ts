@@ -73,8 +73,12 @@ export class MatchListComponent implements OnInit {
     this.store.dispatch(MatchesActions.loadMatches());
   }
 
-  cycleHighlight(): void {
-    this.store.dispatch(MatchesActions.cycleOddHighlight());
+  cycleHighlightNext(): void {
+    this.store.dispatch(MatchesActions.stepOddHighlight({ direction: 1 }));
+  }
+
+  cycleHighlightPrev(): void {
+    this.store.dispatch(MatchesActions.stepOddHighlight({ direction: -1 }));
   }
 
   retry(): void {

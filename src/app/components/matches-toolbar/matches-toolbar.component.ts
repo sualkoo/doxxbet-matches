@@ -18,4 +18,5 @@ export class MatchesToolbarComponent {
 
   readonly back = output<void>();
   readonly cycleHighlight = output<void>();
+  readonly cyclePrev = output<void>();
 }

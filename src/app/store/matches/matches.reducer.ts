@@ -37,4 +37,9 @@ export const matchesReducer = createReducer(
     ...state,
     highlightLevel: state.highlightLevel + 1,
   })),
+
+  on(MatchesActions.stepOddHighlight, (state, { direction }) => ({
+    ...state,
+    highlightLevel: state.highlightLevel + direction,
+  })),
 );

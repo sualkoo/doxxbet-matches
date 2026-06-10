@@ -1,16 +1,93 @@
-.spacer {
-  flex: 1 1 auto;
+// ─── Three-column layout ──────────────────────────────────────────────────────
+
+// mat-toolbar uses flex internally; override to support left/center/right
+:host ::ng-deep mat-toolbar {
+  display: flex;
+  align-items: center;
 }
 
+.toolbar-left,
+.toolbar-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.toolbar-right {
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.toolbar-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 16px;
+}
+
+// ─── Brand ────────────────────────────────────────────────────────────────────
+
+.toolbar-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-transform: uppercase;
+
+  &__accent {
+    background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+// ─── Sport title ──────────────────────────────────────────────────────────────
+
 .toolbar-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ─── Highlight control ────────────────────────────────────────────────────────
+
+.highlight-control {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0 4px;
+}
+
+.highlight-function-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.highlight-label {
+  min-width: 56px;
+  text-align: center;
 }
 
 .highlight-value {
-  margin-left: 12px;
   font-weight: 700;
   color: #ef4444;
   font-size: 1rem;
+}
+
+.highlight-placeholder {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

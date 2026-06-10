@@ -1,11 +1,37 @@
 <mat-toolbar>
-  <button mat-icon-button (click)="back.emit()" aria-label="Back to sports">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <span class="toolbar-title">{{ sportName() || 'Matches' }}</span>
-  <span class="spacer"></span>
-  <button mat-raised-button color="accent" (click)="cycleHighlight.emit()">Highlight Odds</button>
-  @if (highlightedOdd() !== null) {
-    <span class="highlight-value">{{ highlightedOdd()! | number: '1.2-2' }}</span>
-  }
+  <div class="toolbar-left">
+    <button mat-icon-button (click)="back.emit()" aria-label="Back to sports">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="toolbar-title">{{ sportName() || 'Matches' }}</span>
+  </div>
+
+  <div class="toolbar-center">
+    <span class="toolbar-brand">DOXX<span class="toolbar-brand__accent">bet</span></span>
+  </div>
+
+  <div class="toolbar-right">
+    <span class="highlight-function-label">Highlighted odd</span>
+
+    <div class="highlight-control">
+      <button
+        mat-icon-button
+        (click)="cyclePrev.emit()"
+        aria-label="Previous highlighted odd"
+        [disabled]="highlightedOdd() === null"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="highlight-label">
+        @if (highlightedOdd() !== null) {
+          <span class="highlight-value">{{ highlightedOdd()! | number: '1.2-2' }}</span>
+        } @else {
+          <span class="highlight-placeholder">Odds</span>
+        }
+      </span>
+      <button mat-icon-button (click)="cycleHighlight.emit()" aria-label="Next highlighted odd">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
 </mat-toolbar>

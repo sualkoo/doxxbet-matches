@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(239, 68, 68, 0.16), transparent 26%),
+    linear-gradient(180deg, #161616 0%, #111111 100%);
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  position: relative;
+}

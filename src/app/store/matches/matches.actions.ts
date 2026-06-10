@@ -9,5 +9,6 @@ export const MatchesActions = createActionGroup({
     'Load Matches Failure': props<{ error: string }>(),
     'Toggle League': props<{ leagueId: string }>(),
     'Cycle Odd Highlight': emptyProps(),
+    'Step Odd Highlight': props<{ direction: 1 | -1 }>(),
   },
 });

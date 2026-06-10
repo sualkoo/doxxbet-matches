@@ -106,7 +106,8 @@ export const selectCurrentHighlightedOddValue = createSelector(
   selectHighlightLevel,
   (sortedValues, highlightLevel): number | null => {
     if (sortedValues.length === 0) return null;
-    return sortedValues[highlightLevel % sortedValues.length];
+    const len = sortedValues.length;
+    return sortedValues[((highlightLevel % len) + len) % len];
   },
 );
 
