@@ -29,12 +29,18 @@
     </mat-card>
   } @else {
     <app-matches-sidenav
-      [selectedRegionId]="selectedRegionId()"
-      [visibleLeagues]="visibleLeagues()"
-      [highlightedOdd]="highlightedOdd()"
-      [collapsedLeagues]="collapsedLeagues()"
-      (countrySelected)="selectCountry($event)"
-      (leagueToggled)="toggleLeague($event)"
-    />
+      [selectedLeagueId]="selectedLeagueId()"
+      (leagueSelected)="selectLeague($event)"
+    >
+      @for (league of visibleLeagues(); track league.leagueId) {
+        <app-league-section
+          [league]="league"
+          [highlightedOdd]="highlightedOdd()"
+          [collapsed]="collapsedLeagues().has(league.leagueId)"
+          (toggled)="toggleLeague($event)"
+        />
+      }
+      <div class="league-list-bottom-spacer" aria-hidden="true"></div>
+    </app-matches-sidenav>
   }
 }

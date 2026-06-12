@@ -21,12 +21,19 @@ import {
 } from '../../store/matches/matches.selectors';
 import { MatchesSidenavComponent } from '../../components/matches-sidenav/matches-sidenav.component';
 import { MatchesToolbarComponent } from '../../components/matches-toolbar/matches-toolbar.component';
+import { LeagueSectionComponent } from '../../components/league-section/league-section.component';
 
 @Component({
   selector: 'app-match-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatProgressBarModule, MatCardModule, MatchesToolbarComponent, MatchesSidenavComponent],
+  imports: [
+    MatProgressBarModule,
+    MatCardModule,
+    MatchesToolbarComponent,
+    MatchesSidenavComponent,
+    LeagueSectionComponent,
+  ],
   templateUrl: './match-list.component.html',
   styleUrl: './match-list.component.scss',
 })
@@ -55,13 +62,21 @@ export class MatchListComponent implements OnInit {
   });
 
   selectedRegionId = signal<number | null>(null);
+  selectedLeagueId = signal<string | null>(null);
   collapsedLeagues = signal<ReadonlySet<string>>(new Set());
 
   visibleLeagues = computed<LeagueGroup[]>(() => {
     const regionId = this.selectedRegionId();
+    const leagueId = this.selectedLeagueId();
     const allLeagues = this.groups().flatMap((s) => s.leagues);
-    if (regionId === null) return allLeagues;
-    return allLeagues.filter((l) => l.matches.some((m) => m.RegionID === regionId));
+    let leagues = allLeagues;
+    if (regionId !== null) {
+      leagues = leagues.filter((l) => l.matches.some((m) => m.RegionID === regionId));
+    }
+    if (leagueId !== null) {
+      leagues = leagues.filter((l) => l.leagueId === leagueId);
+    }
+    return leagues;
   });
 
   private readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
@@ -97,6 +112,14 @@ export class MatchListComponent implements OnInit {
       return;
     }
     this.selectedRegionId.update((current) => (current === regionId ? null : regionId));
+  }
+
+  selectLeague(leagueId: string | null): void {
+    if (leagueId === null) {
+      this.selectedLeagueId.set(null);
+      return;
+    }
+    this.selectedLeagueId.update((current) => (current === leagueId ? null : leagueId));
   }
 
   ngOnInit(): void {

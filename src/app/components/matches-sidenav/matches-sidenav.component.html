@@ -1,78 +1,34 @@
-<mat-sidenav-container
-  class="sidenav-container"
-  [class.sidenav-container--collapsed]="!sidenavOpen()"
->
-  <mat-sidenav mode="side" opened [class.sidenav--collapsed]="!sidenavOpen()" class="sidenav">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav">
     <div class="sidenav-body">
-      <mat-nav-list>
-        <mat-list-item
-          [class.active]="selectedSportId() === null"
-          (click)="sportSelected.emit(null)"
-          (keydown.enter)="sportSelected.emit(null)"
-        >
-          <span class="sport-icon sport-icon--all" aria-hidden="true"> </span>
-        </mat-list-item>
-      </mat-nav-list>
-      <span class="sidenav-label">Countries</span>
-      <mat-nav-list>
-        <mat-list-item
-          [class.active]="selectedRegionId() === null"
-          (click)="countrySelected.emit(null)"
-          (keydown.enter)="countrySelected.emit(null)"
-        >
-          <span class="country-flag country-flag--all" aria-hidden="true">
-            <mat-icon>public</mat-icon>
-          </span>
-          <span class="country-name">All Countries</span>
-        </mat-list-item>
-        @for (country of countries(); track country.regionId) {
-          <mat-list-item
-            [class.active]="selectedRegionId() === country.regionId"
-            (click)="countrySelected.emit(country.regionId)"
-            (keydown.enter)="countrySelected.emit(country.regionId)"
-          >
-            <span class="country-flag" aria-hidden="true">
-              @if (country.flagCode) {
-                <img
-                  class="country-flag__img"
-                  [src]="'https://flagcdn.com/32x24/' + country.flagCode + '.png'"
-                  [srcset]="'https://flagcdn.com/64x48/' + country.flagCode + '.png 2x'"
-                  width="22"
-                  height="16"
-                  loading="lazy"
-                  [alt]="country.regionName + ' flag'"
-                />
-              } @else {
-                <mat-icon class="country-flag__fallback">flag</mat-icon>
+      <span class="sidenav-label">Sports</span>
+      <mat-accordion class="sport-accordion" multi>
+        @for (sport of sportGroups(); track sport.sportId) {
+          <mat-expansion-panel class="sport-panel">
+            <mat-expansion-panel-header>
+              <mat-icon class="sport-icon">{{ sportIcon(sport.sportName) }}</mat-icon>
+              <mat-panel-title class="sport-title">{{ sport.sportName }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              @for (league of sport.leagues; track league.leagueId) {
+                <mat-list-item
+                  class="sport-league"
+                  [class.active]="selectedLeagueId() === league.leagueId"
+                  (click)="leagueSelected.emit(league.leagueId)"
+                  (keydown.enter)="leagueSelected.emit(league.leagueId)"
+                >
+                  <span class="league-name">{{ league.leagueName }}</span>
+                  <span class="match-count">{{ league.matches.length }}</span>
+                </mat-list-item>
               }
-            </span>
-            <span class="country-name">{{ country.regionName }}</span>
-            <span class="match-count">{{ country.matchCount }}</span>
-          </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
         }
-      </mat-nav-list>
-    </div>
-    <div class="sidenav-footer">
-      <button
-        mat-icon-button
-        class="sidenav-toggle-btn"
-        (click)="toggleSidenav()"
-        [attr.aria-label]="sidenavOpen() ? 'Collapse sidebar' : 'Expand sidebar'"
-      >
-        <mat-icon>{{ sidenavOpen() ? 'chevron_left' : 'chevron_right' }}</mat-icon>
-      </button>
+      </mat-accordion>
     </div>
   </mat-sidenav>
 
   <mat-sidenav-content class="sidenav-content">
-    @for (league of visibleLeagues(); track league.leagueId) {
-      <app-league-section
-        [league]="league"
-        [highlightedOdd]="highlightedOdd()"
-        [collapsed]="collapsedLeagues().has(league.leagueId)"
-        (toggled)="leagueToggled.emit($event)"
-      />
-    }
-    <div class="league-list-bottom-spacer" aria-hidden="true"></div>
+    <ng-content />
   </mat-sidenav-content>
 </mat-sidenav-container>
