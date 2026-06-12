@@ -4,6 +4,15 @@
 >
   <mat-sidenav mode="side" opened [class.sidenav--collapsed]="!sidenavOpen()" class="sidenav">
     <div class="sidenav-body">
+      <mat-nav-list>
+        <mat-list-item
+          [class.active]="selectedSportId() === null"
+          (click)="sportSelected.emit(null)"
+          (keydown.enter)="sportSelected.emit(null)"
+        >
+          <span class="sport-icon sport-icon--all" aria-hidden="true"> </span>
+        </mat-list-item>
+      </mat-nav-list>
       <span class="sidenav-label">Countries</span>
       <mat-nav-list>
         <mat-list-item

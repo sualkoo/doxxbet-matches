@@ -3,8 +3,18 @@
 <td>{{ match().sportName }}</td>
 <td>{{ match().regionName }}</td>
 <td>{{ match().leagueName }}</td>
-<td app-odd-cell [value]="match().odds.home" [highlightedOdd]="highlightedOdd()"></td>
-<td app-odd-cell [value]="match().odds.draw" [highlightedOdd]="highlightedOdd()"></td>
-<td app-odd-cell [value]="match().odds.away" [highlightedOdd]="highlightedOdd()"></td>
-<td app-odd-cell [value]="match().odds.homeOrDraw" [highlightedOdd]="highlightedOdd()"></td>
-<td app-odd-cell [value]="match().odds.drawOrAway" [highlightedOdd]="highlightedOdd()"></td>
+<td [class.odd--highlighted]="isOddHighlighted(match().odds.home)">
+  {{ formatOdd(match().odds.home) }}
+</td>
+<td [class.odd--highlighted]="isOddHighlighted(match().odds.draw)">
+  {{ formatOdd(match().odds.draw) }}
+</td>
+<td [class.odd--highlighted]="isOddHighlighted(match().odds.away)">
+  {{ formatOdd(match().odds.away) }}
+</td>
+<td [class.odd--highlighted]="isOddHighlighted(match().odds.homeOrDraw)">
+  {{ formatOdd(match().odds.homeOrDraw) }}
+</td>
+<td [class.odd--highlighted]="isOddHighlighted(match().odds.drawOrAway)">
+  {{ formatOdd(match().odds.drawOrAway) }}
+</td>

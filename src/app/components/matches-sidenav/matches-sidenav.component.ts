@@ -25,12 +25,14 @@ import { LeagueSectionComponent } from '../league-section/league-section.compone
 export class MatchesSidenavComponent {
   private readonly store = inject(Store);
 
+  readonly selectedSportId = input<number | null>(null);
   readonly selectedRegionId = input<number | null>(null);
   readonly visibleLeagues = input.required<LeagueGroup[]>();
   readonly highlightedOdd = input<number | null>(null);
   readonly collapseAllToken = input(0);
   readonly allVisibleLeaguesCollapsed = input(false);
   readonly countrySelected = output<number | null>();
+  readonly sportSelected = output<number | null>();
 
   readonly countries = toSignal(this.store.select(selectCountries), { initialValue: [] });
   readonly sidenavOpen = signal(true);

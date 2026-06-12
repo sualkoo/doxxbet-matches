@@ -1,3 +1,10 @@
 :host {
   display: table-row;
 }
+
+.odd--highlighted {
+  background: #ef4444;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 4px;
+}
