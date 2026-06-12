@@ -7,7 +7,6 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -39,7 +38,6 @@ import { LeagueSectionComponent } from '../../components/league-section/league-s
 })
 export class MatchListComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly router = inject(Router);
 
   /** Bound from the `:sportId` route param via withComponentInputBinding(). */
   readonly sportId = input<string>();
@@ -159,9 +157,5 @@ export class MatchListComponent implements OnInit {
 
   retry(): void {
     this.store.dispatch(MatchesActions.loadMatches());
-  }
-
-  goBack(): void {
-    this.router.navigate(['/']);
   }
 }

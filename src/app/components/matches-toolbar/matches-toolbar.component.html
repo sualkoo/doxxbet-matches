@@ -1,6 +1,6 @@
 <mat-toolbar>
   <div class="toolbar-center">
-    <span class="toolbar-brand">DOXX<span class="toolbar-brand__accent">bet</span></span>
+    <span class="toolbar-brand">DOXX</span><span class="toolbar-brand__accent">bet</span>
   </div>
 
   <div class="toolbar-right">
@@ -9,20 +9,14 @@
     <div class="highlight-control">
       <button
         mat-icon-button
-        (click)="cyclePrev.emit()"
+        (click)="cyclePrevOdd.emit()"
         aria-label="Previous highlighted odd"
         [disabled]="highlightedOdd() === null"
       >
         <mat-icon>chevron_left</mat-icon>
       </button>
-      <span class="highlight-label">
-        @if (highlightedOdd() !== null) {
-          <span class="highlight-value">{{ highlightedOdd()! | number: '1.2-2' }}</span>
-        } @else {
-          <span class="highlight-placeholder">Odds</span>
-        }
-      </span>
-      <button mat-icon-button (click)="cycleHighlight.emit()" aria-label="Next highlighted odd">
+      <span class="highlight-label">{{ highlightedOdd() | formatOdd }}</span>
+      <button mat-icon-button (click)="cycleNextOdd.emit()" aria-label="Next highlighted odd">
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
@@ -30,7 +24,7 @@
     <button
       mat-stroked-button
       type="button"
-      (click)="toggleAllLeagues.emit()"
+      (click)="allLeaguesCollapsed.set(!allLeaguesCollapsed())"
       [attr.aria-label]="allLeaguesCollapsed() ? 'Expand all leagues' : 'Collapse all leagues'"
     >
       {{ allLeaguesCollapsed() ? 'Expand all' : 'Collapse all' }}

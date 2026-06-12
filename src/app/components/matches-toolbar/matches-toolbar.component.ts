@@ -1,23 +1,21 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { FormatOddPipe } from '../../shared/pipes/format-odd.pipe';
 
 @Component({
   selector: 'app-matches-toolbar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, DecimalPipe],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, FormatOddPipe],
   templateUrl: './matches-toolbar.component.html',
   styleUrl: './matches-toolbar.component.scss',
 })
 export class MatchesToolbarComponent {
-  readonly sportName = input('');
   readonly highlightedOdd = input<number | null>(null);
-  readonly allLeaguesCollapsed = input(false);
+  readonly allLeaguesCollapsed = model(false);
 
-  readonly toggleAllLeagues = output<void>();
-  readonly cycleHighlight = output<void>();
-  readonly cyclePrev = output<void>();
+  readonly cycleNextOdd = output<void>();
+  readonly cyclePrevOdd = output<void>();
 }

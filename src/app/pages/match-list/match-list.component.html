@@ -1,11 +1,9 @@
 <app-matches-toolbar
-  [sportName]="sportName()"
   [highlightedOdd]="highlightedOdd()"
   [allLeaguesCollapsed]="allLeaguesCollapsed()"
-  (back)="goBack()"
-  (toggleAllLeagues)="toggleAllVisibleLeagues()"
-  (cycleHighlight)="cycleHighlightNext()"
-  (cyclePrev)="cycleHighlightPrev()"
+  (allLeaguesCollapsedChange)="toggleAllVisibleLeagues()"
+  (cycleNextOdd)="cycleHighlightNext()"
+  (cyclePrevOdd)="cycleHighlightPrev()"
 />
 
 @if (status() === 'loading') {
