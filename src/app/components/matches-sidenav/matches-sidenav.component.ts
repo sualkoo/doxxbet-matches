@@ -29,10 +29,10 @@ export class MatchesSidenavComponent {
   readonly selectedRegionId = input<number | null>(null);
   readonly visibleLeagues = input.required<LeagueGroup[]>();
   readonly highlightedOdd = input<number | null>(null);
-  readonly collapseAllToken = input(0);
-  readonly allVisibleLeaguesCollapsed = input(false);
+  readonly collapsedLeagues = input<ReadonlySet<string>>(new Set());
   readonly countrySelected = output<number | null>();
   readonly sportSelected = output<number | null>();
+  readonly leagueToggled = output<string>();
 
   readonly countries = toSignal(this.store.select(selectCountries), { initialValue: [] });
   readonly sidenavOpen = signal(true);

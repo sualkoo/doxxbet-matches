@@ -2,11 +2,11 @@
   <div class="league-header">
     <span class="league-title">{{ league().leagueName }}</span>
     <button mat-icon-button type="button" (click)="toggle()">
-      <mat-icon [class.collapsed]="isCollapsed()">expand_more</mat-icon>
+      <mat-icon [class.collapsed]="collapsed()">expand_more</mat-icon>
     </button>
   </div>
 
-  @if (!isCollapsed()) {
+  @if (!collapsed()) {
     <table>
       <colgroup>
         <col class="col-name" />

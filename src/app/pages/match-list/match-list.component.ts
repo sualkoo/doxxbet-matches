@@ -55,8 +55,7 @@ export class MatchListComponent implements OnInit {
   });
 
   selectedRegionId = signal<number | null>(null);
-  collapseAllToken = signal(0);
-  allVisibleLeaguesCollapsed = signal(false);
+  collapsedLeagues = signal<ReadonlySet<string>>(new Set());
 
   visibleLeagues = computed<LeagueGroup[]>(() => {
     const regionId = this.selectedRegionId();
@@ -85,6 +84,13 @@ export class MatchListComponent implements OnInit {
     return sortedValues[((level % len) + len) % len];
   });
 
+  allLeaguesCollapsed = computed<boolean>(() => {
+    const leagues = this.visibleLeagues();
+    if (leagues.length === 0) return false;
+    const collapsed = this.collapsedLeagues();
+    return leagues.every((l) => collapsed.has(l.leagueId));
+  });
+
   selectCountry(regionId: number | null): void {
     if (regionId === null) {
       this.selectedRegionId.set(null);
@@ -108,8 +114,24 @@ export class MatchListComponent implements OnInit {
   }
 
   toggleAllVisibleLeagues(): void {
-    this.allVisibleLeaguesCollapsed.update((v) => !v);
-    this.collapseAllToken.update((v) => v + 1);
+    const leagues = this.visibleLeagues();
+    if (this.allLeaguesCollapsed()) {
+      this.collapsedLeagues.set(new Set());
+    } else {
+      this.collapsedLeagues.set(new Set(leagues.map((l) => l.leagueId)));
+    }
+  }
+
+  toggleLeague(leagueId: string): void {
+    this.collapsedLeagues.update((set) => {
+      const next = new Set(set);
+      if (next.has(leagueId)) {
+        next.delete(leagueId);
+      } else {
+        next.add(leagueId);
+      }
+      return next;
+    });
   }
 
   retry(): void {

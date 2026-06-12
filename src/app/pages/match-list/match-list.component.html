@@ -1,7 +1,7 @@
 <app-matches-toolbar
   [sportName]="sportName()"
   [highlightedOdd]="highlightedOdd()"
-  [allLeaguesCollapsed]="allVisibleLeaguesCollapsed()"
+  [allLeaguesCollapsed]="allLeaguesCollapsed()"
   (back)="goBack()"
   (toggleAllLeagues)="toggleAllVisibleLeagues()"
   (cycleHighlight)="cycleHighlightNext()"
@@ -32,9 +32,9 @@
       [selectedRegionId]="selectedRegionId()"
       [visibleLeagues]="visibleLeagues()"
       [highlightedOdd]="highlightedOdd()"
-      [collapseAllToken]="collapseAllToken()"
-      [allVisibleLeaguesCollapsed]="allVisibleLeaguesCollapsed()"
+      [collapsedLeagues]="collapsedLeagues()"
       (countrySelected)="selectCountry($event)"
+      (leagueToggled)="toggleLeague($event)"
     />
   }
 }

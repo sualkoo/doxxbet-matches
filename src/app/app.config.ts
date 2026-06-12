@@ -13,7 +13,7 @@ import {
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { matchesReducer } from './store/matches/matches.reducer';
 import { loadMatchesEffect } from './store/matches/matches.effects';
 import { ENVIRONMENT } from '../environments/environment.token';
@@ -30,6 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideEffects([{ loadMatchesEffect }]),
     ...(environment.production ? [] : [provideStoreDevtools({ maxAge: 25 })]),
     DatePipe,
+    DecimalPipe,
     { provide: ENVIRONMENT, useValue: environment },
   ],
 };

@@ -4,17 +4,17 @@
 <td>{{ match().regionName }}</td>
 <td>{{ match().leagueName }}</td>
 <td [class.odd--highlighted]="isOddHighlighted(match().odds.home)">
-  {{ formatOdd(match().odds.home) }}
+  {{ match().odds.home | formatOdd }}
 </td>
 <td [class.odd--highlighted]="isOddHighlighted(match().odds.draw)">
-  {{ formatOdd(match().odds.draw) }}
+  {{ match().odds.draw | formatOdd }}
 </td>
 <td [class.odd--highlighted]="isOddHighlighted(match().odds.away)">
-  {{ formatOdd(match().odds.away) }}
+  {{ match().odds.away | formatOdd }}
 </td>
 <td [class.odd--highlighted]="isOddHighlighted(match().odds.homeOrDraw)">
-  {{ formatOdd(match().odds.homeOrDraw) }}
+  {{ match().odds.homeOrDraw | formatOdd }}
 </td>
 <td [class.odd--highlighted]="isOddHighlighted(match().odds.drawOrAway)">
-  {{ formatOdd(match().odds.drawOrAway) }}
+  {{ match().odds.drawOrAway | formatOdd }}
 </td>

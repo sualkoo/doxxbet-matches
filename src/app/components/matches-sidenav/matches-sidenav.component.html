@@ -69,8 +69,8 @@
       <app-league-section
         [league]="league"
         [highlightedOdd]="highlightedOdd()"
-        [collapseAllToken]="collapseAllToken()"
-        [allVisibleLeaguesCollapsed]="allVisibleLeaguesCollapsed()"
+        [collapsed]="collapsedLeagues().has(league.leagueId)"
+        (toggled)="leagueToggled.emit($event)"
       />
     }
     <div class="league-list-bottom-spacer" aria-hidden="true"></div>

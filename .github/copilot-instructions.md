@@ -72,10 +72,6 @@ src/
         match-row.component.ts
         match-row.component.html
         match-row.component.scss
-      odd-cell/
-        odd-cell.component.ts
-        odd-cell.component.html
-        odd-cell.component.scss
     shared/
       directives/
         highlight-odd.directive.ts
