@@ -5,7 +5,10 @@ import { MatchesService } from '../../core/services/matches.service';
 import { MatchesActions } from './matches.actions';
 
 export const loadMatchesEffect = createEffect(
-  (actions$ = inject(Actions), matchesService = inject(MatchesService)) => {
+  () => {
+    const actions$ = inject(Actions);
+    const matchesService = inject(MatchesService);
+
     return actions$.pipe(
       ofType(MatchesActions.loadMatches),
       switchMap(() =>
