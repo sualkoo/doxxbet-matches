@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { MatchesState } from './matches.state';
-import { ApiOdd, EnrichedMatch, MatchOdds } from '../../core/models';
+import { ApiOdd } from '../../core/models/api-response.model';
+import { EnrichedMatch, MatchOdds } from '../../core/models/enriched-match.model';
 
 function resolveOdds(eventId: number, odds: Readonly<Record<string, ApiOdd>>): MatchOdds {
   return {

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { EnrichedMatch } from '../../core/models';
+import { EnrichedMatch } from '../../core/models/enriched-match.model';
 import { FormatDatePipe } from '../../shared/pipes/format-date.pipe';
 import { FormatOddPipe } from '../../shared/pipes/format-odd.pipe';
 
 @Component({
-  selector: '[app-match-row]',
+  selector: 'app-match-row',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormatDatePipe, FormatOddPipe],

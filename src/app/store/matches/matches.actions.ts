@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { ApiResponse } from '../../core/models';
+import { ApiResponse } from '../../core/models/api-response.model';
 
 export const MatchesActions = createActionGroup({
   source: 'Matches',

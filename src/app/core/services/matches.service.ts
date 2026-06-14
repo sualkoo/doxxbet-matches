@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, retry, throwError } from 'rxjs';
-import { ApiResponse } from '../models';
+import { ApiResponse } from '../models/api-response.model';
 import { ENVIRONMENT } from '../../../environments/environment.token';
 
 @Injectable({ providedIn: 'root' })

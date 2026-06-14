@@ -1,4 +1,4 @@
-import { ApiLabel, ApiMatch, ApiOdd } from '../../core/models';
+import { ApiLabel, ApiMatch, ApiOdd } from '../../core/models/api-response.model';
 
 export interface MatchesState {
   readonly data: readonly ApiMatch[];

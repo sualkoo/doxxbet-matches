@@ -36,7 +36,7 @@
       </thead>
       <tbody>
         @for (match of league().matches; track match.EventID) {
-          <tr app-match-row [match]="match" [highlightedOdd]="highlightedOdd()"></tr>
+          <app-match-row [match]="match" [highlightedOdd]="highlightedOdd()"></app-match-row>
         }
       </tbody>
     </table>
