@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, input, model, output } from '@angul
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import { FormatOddPipe } from '../../shared/pipes/format-odd.pipe';
 
 @Component({
   selector: 'app-matches-toolbar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, FormatOddPipe],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterLink, FormatOddPipe],
   templateUrl: './matches-toolbar.component.html',
   styleUrl: './matches-toolbar.component.scss',
 })

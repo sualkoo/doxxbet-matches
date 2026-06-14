@@ -1,0 +1,211 @@
+:host {
+  --landing-bg: #0f0f10;
+  --landing-surface: #1a1a1b;
+  --landing-border: #323235;
+  --landing-text: #ffffff;
+  --landing-muted: #9ca3af;
+  --landing-accent: #ef4444;
+  --landing-accent-strong: #991b1b;
+
+  display: block;
+  min-height: 100dvh;
+}
+
+.landing {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background:
+    radial-gradient(circle at 14% 20%, rgb(239 68 68 / 16%) 0 16%, transparent 54%),
+    radial-gradient(circle at 82% 80%, rgb(153 27 27 / 24%) 0 18%, transparent 58%),
+    linear-gradient(160deg, #080808, var(--landing-bg) 56%, #141414 100%);
+  overflow: hidden;
+}
+
+.landing__backdrop {
+  position: absolute;
+  inset: auto -12vw -24dvh;
+  height: 56dvh;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(to top, rgb(239 68 68 / 16%), transparent 72%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.landing__icons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.landing__icon {
+  position: absolute;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  width: clamp(1.8rem, 3vw, 2.5rem);
+  height: clamp(1.8rem, 3vw, 2.5rem);
+  color: rgb(255 255 255 / 14%);
+  filter: drop-shadow(0 8px 24px rgb(0 0 0 / 28%));
+  animation: float 7s ease-in-out infinite;
+}
+
+.landing__icon--soccer {
+  top: 14%;
+  left: 12%;
+  color: rgb(239 68 68 / 40%);
+  animation-delay: -1.2s;
+}
+
+.landing__icon--basketball {
+  top: 24%;
+  right: 16%;
+  animation-delay: -3.1s;
+}
+
+.landing__icon--tennis {
+  top: 66%;
+  left: 18%;
+  animation-delay: -2.2s;
+}
+
+.landing__icon--hockey {
+  top: 72%;
+  right: 12%;
+  color: rgb(239 68 68 / 34%);
+  animation-delay: -4.3s;
+}
+
+.landing__icon--esports {
+  top: 42%;
+  left: 6%;
+  animation-delay: -0.8s;
+}
+
+.landing__icon--motorsport {
+  top: 45%;
+  right: 7%;
+  animation-delay: -5.2s;
+}
+
+.landing__content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 760px);
+  padding: clamp(1rem, 2vw, 1.6rem);
+  text-align: center;
+  animation: reveal 420ms ease-out both;
+}
+
+.landing__eyebrow {
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--landing-muted);
+  font-size: 0.72rem;
+}
+
+.landing__brand {
+  margin: 0;
+  color: var(--landing-text);
+  font-size: clamp(3rem, 10vw, 6.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.landing__brand-accent {
+  background: linear-gradient(135deg, var(--landing-accent) 0%, var(--landing-accent-strong) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing__copy {
+  margin: 1rem auto 1.8rem;
+  max-width: 44ch;
+  color: var(--landing-muted);
+  font-size: clamp(0.98rem, 1.8vw, 1.1rem);
+  line-height: 1.55;
+}
+
+.landing__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.8rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgb(248 113 113 / 58%);
+  background: linear-gradient(90deg, var(--landing-accent), var(--landing-accent-strong));
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 7%) inset,
+    0 10px 28px rgb(239 68 68 / 36%);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease;
+}
+
+.landing__cta:link,
+.landing__cta:visited,
+.landing__cta:active {
+  color: #ffffff;
+}
+
+.landing__cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 10%) inset,
+    0 14px 34px rgb(239 68 68 / 46%);
+  filter: saturate(1.08);
+}
+
+.landing__cta:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 640px) {
+  .landing__icon {
+    font-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .landing__copy {
+    margin-bottom: 1.35rem;
+  }
+
+  .landing__cta {
+    width: 100%;
+  }
+}
