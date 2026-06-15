@@ -50,6 +50,7 @@ export class MatchListComponent implements OnInit {
 
   readonly selectedLeagueId = signal<string | null>(null);
   readonly collapsedLeagues = signal<ReadonlySet<string>>(new Set());
+  readonly highlightedOdd = signal<number | null>(null);
 
   readonly visibleLeagues = computed<LeagueGroup[]>(() => {
     return this.getVisibleLeagues(this.allGroups(), this.selectedLeagueId());
@@ -76,8 +77,6 @@ export class MatchListComponent implements OnInit {
   readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
     return this.getVisibleSortedUniqueOddValues();
   });
-
-  readonly highlightedOdd = signal<number | null>(null);
 
   readonly allLeaguesCollapsed = computed<boolean>(() => {
     return this.areAllVisibleLeaguesCollapsed(this.visibleLeagues(), this.collapsedLeagues());

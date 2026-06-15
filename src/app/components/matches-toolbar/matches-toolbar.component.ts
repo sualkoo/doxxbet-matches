@@ -42,25 +42,18 @@ export class MatchesToolbarComponent {
     const sortedValues = this.sortedOddValues();
     const level = this.highlightLevel();
 
-    if (this.hasNoVisibleOddValues(sortedValues)) {
-      this.clearHighlightedOdd(level);
+    if (sortedValues.length === 0) {
+      this.highlightedOdd.set(null);
+      this.lastProcessedHighlightLevel = level;
       return;
     }
 
     const highlightedByLevel = this.getHighlightedOdd(sortedValues, level);
+
     if (this.shouldRefreshHighlightedOdd(sortedValues, level)) {
       this.highlightedOdd.set(highlightedByLevel);
     }
 
-    this.lastProcessedHighlightLevel = level;
-  }
-
-  private hasNoVisibleOddValues(sortedValues: number[]): boolean {
-    return sortedValues.length === 0;
-  }
-
-  private clearHighlightedOdd(level: number): void {
-    this.highlightedOdd.set(null);
     this.lastProcessedHighlightLevel = level;
   }
 
@@ -75,12 +68,8 @@ export class MatchesToolbarComponent {
   }
 
   private currentHighlightedOddIsMissing(sortedValues: number[]): boolean {
-    const currentHighlightedOdd = this.getCurrentHighlightedOdd();
+    const currentHighlightedOdd = untracked(() => this.highlightedOdd());
     return currentHighlightedOdd === null || !sortedValues.includes(currentHighlightedOdd);
-  }
-
-  private getCurrentHighlightedOdd(): number | null {
-    return untracked(() => this.highlightedOdd());
   }
 
   private getHighlightedOdd(sortedValues: number[], level: number): number | null {
