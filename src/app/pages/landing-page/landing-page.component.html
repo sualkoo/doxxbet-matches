@@ -1,12 +1,9 @@
 <main class="landing" aria-labelledby="landing-title">
   <div class="landing__backdrop" aria-hidden="true"></div>
   <div class="landing__icons" aria-hidden="true">
-    <mat-icon class="landing__icon landing__icon--soccer">sports_soccer</mat-icon>
-    <mat-icon class="landing__icon landing__icon--basketball">sports_basketball</mat-icon>
-    <mat-icon class="landing__icon landing__icon--tennis">sports_tennis</mat-icon>
-    <mat-icon class="landing__icon landing__icon--hockey">sports_hockey</mat-icon>
-    <mat-icon class="landing__icon landing__icon--esports">sports_esports</mat-icon>
-    <mat-icon class="landing__icon landing__icon--motorsport">sports_motorsports</mat-icon>
+    @for (item of floatingSportIcons; track item.modifier) {
+      <mat-icon [class]="'landing__icon landing__icon--' + item.modifier">{{ item.icon }}</mat-icon>
+    }
   </div>
 
   <section class="landing__content">
