@@ -116,8 +116,11 @@ export class MatchListComponent implements OnInit {
 
   private getHighlightedOdd(sortedValues: number[], level: number): number | null {
     if (sortedValues.length === 0) return null;
+
     const len = sortedValues.length;
-    return sortedValues[((level % len) + len) % len];
+    const highlightedOddIndex = ((level % len) + len) % len;
+
+    return sortedValues[highlightedOddIndex];
   }
 
   private areAllVisibleLeaguesCollapsed(
