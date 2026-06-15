@@ -1,142 +1,153 @@
 # DoxxBet Match Viewer
 
-A real-time sports match viewer built with Angular 21 and NgRx 21 that fetches and displays live betting data from the DoxxBet API, grouped by sport and league.
+A sports betting dashboard built with Angular 21 and NgRx 21. The app loads offer data from the DoxxBet feed, enriches it with labels and odds, and presents matches in a league-focused browsing experience.
 
-## Features
+## Current Features
 
-- Fetches match data from `https://static.doxxbet.sk/offer/list.json`
-- Matches grouped by sport, then by league
-- Collapsible league sections with animated chevron
-- Formatted match dates (`d.M. HH:mm`)
-- 5 odds columns: 1, X, 2, 1X, X2
-- Cycling "Highlight Top Odds" feature with amber highlight
-- Sport-specific colour-coded left borders
-- Dark theme throughout
-- Loading indicator and error/retry state
-- Empty state when no matches available
-- Responsive horizontal scrolling on narrow screens
+- Landing page with branded hero section and route into the matches dashboard
+- Lazy-loaded routes for the landing page (`/`) and match list (`/matches`)
+- Fetches data from `https://static.doxxbet.sk/offer/list.json`
+- Groups matches by sport, then by league in the store
+- Persistent side navigation with sports accordion and per-league selection
+- League cards with collapse and expand behavior
+- Global "Collapse all" and "Expand all" controls for visible leagues
+- Highlighted odd cycling across currently visible matches
+- Five odds columns per match: `1`, `X`, `2`, `1X`, `X2`
+- Formatted dates (`d.M. HH:mm`) and odds (`1.2-2`, fallback `—`)
+- Loading, error, retry, and empty states
+- Shared footer with link to the raw data feed
 
 ## Tech Stack
 
-- **Angular 21** — Standalone components, zoneless change detection, signal APIs
-- **NgRx 21** — Functional effects, memoized selectors, store devtools
-- **Angular Material 21** — Toolbar, cards, buttons, icons, progress bar
-- **SCSS** — Component and global styles
+- **Angular 21**: standalone components, zoneless change detection, signals, lazy route loading
+- **NgRx 21**: store, functional effects, memoized selectors, devtools in non-production builds
+- **Angular Material 21**: toolbar, sidenav, expansion panels, cards, buttons, icons, progress bar
+- **SCSS**: component-scoped and global styling
+- **Vitest**: unit test runner via `ng test`
 
 ## Getting Started
 
-**Prerequisites:** Node.js 20+, Angular CLI 21+
+**Prerequisites:** Node.js 20+ and npm
 
 ```bash
 npm install
-ng serve
+npm start
 ```
 
 Open `http://localhost:4200` in your browser.
 
-## Architecture
+## App Structure
 
-```
-Action → Effect → Reducer → Selector → Component
-  ↓         ↓        ↓          ↓           ↓
-loadMatches  HTTP   state    enriched     renders
-             call   update   matches      table
-```
+### Routes
 
-- **Actions** (`matches.actions.ts`): `loadMatches`, `loadMatchesSuccess`, `loadMatchesFailure`, `stepOddHighlight`
-- **Effects** (`matches.effects.ts`): Listens for `loadMatches`, calls `MatchesService`, dispatches success/failure
-- **Reducer** (`matches.reducer.ts`): Updates state based on actions
-- **Selectors** (`matches.selectors.ts`): `selectEnrichedMatches`, `selectGroupedMatches`, `selectSports`, `selectCountries`
-- **Components**: `MatchListComponent` → `MatchesSidenavComponent` → `LeagueSectionComponent` → `MatchRowComponent` → `OddCellComponent`
+- `/`: landing page with a branded intro and CTA to the dashboard
+- `/matches`: match browser with toolbar, sidenav, and grouped league sections
 
-## Highlight Feature
+### State Flow
 
-The toolbar's highlight buttons dispatch `stepOddHighlight({ direction })`, which increments or decrements a shared `highlightLevel` counter in the store. `MatchListComponent` computes the highlighted value from the currently visible (country-filtered) leagues:
-
-```
-sortedUniqueOddValues[((highlightLevel % len) + len) % len]
+```text
+Action -> Effect -> Service -> Reducer -> Selector -> Component
 ```
 
-(The modulo wrapping handles both forward and backward stepping.)
+- **Actions**: `loadMatches`, `loadMatchesSuccess`, `loadMatchesFailure`, `stepOddHighlight`
+- **Effect**: `loadMatchesEffect` calls `MatchesService.getMatches()` and dispatches success or failure
+- **Reducer**: tracks `data`, `odds`, `labels`, `status`, `error`, and `highlightLevel`
+- **Selectors**:
+  - `selectStatus`
+  - `selectHighlightLevel`
+  - `selectEnrichedMatches`
+  - `selectGroupedMatches`
 
-For example, with values `[2.53, 2.30, 1.54, 1.01]`:
+### Component Tree
 
-- Step 1 → highlights **2.53**
-- Step 2 → highlights **2.30**
-- Step 3 → highlights **1.54**
-- Step 4 → highlights **1.01**
-- Step 5 → wraps back to **2.53**
+```text
+App
+|- RouterOutlet
+|  |- LandingPageComponent
+|  \- MatchListComponent
+|     |- MatchesToolbarComponent
+|     |- MatchesSidenavComponent
+|     |- LeagueSectionComponent
+|     \- MatchRowComponent
+\- SiteFooterComponent
+```
 
-All `OddCellComponent` cells with a matching value get the amber highlight simultaneously.
+## Highlighted Odd Behavior
 
-## API
+The toolbar arrows dispatch `stepOddHighlight({ direction })`, which increments or decrements a shared `highlightLevel` in the store.
 
-**Endpoint:** `GET https://static.doxxbet.sk/offer/list.json`
+`MatchListComponent` collects all unique odd values from the currently visible leagues, sorts them descending, and resolves the active highlight with wraparound logic:
 
-**Response structure:**
+```ts
+sortedUniqueOddValues[((highlightLevel % len) + len) % len];
+```
+
+All match cells whose odd value equals the current highlighted value receive the highlight state.
+
+## Data Model
+
+The app consumes a response shaped like this:
 
 ```json
 {
-  "EventChanceTypes": [ { "ID", "Name", "EventDate", "SportID", "RegionID", "LeagueID", "EventChanceTypeID" } ],
-  "Odds":             [ { "EventChanceTypeID", "Value", "OddTypeID" } ],
-  "Labels":           { "SP_1": "Football", "RE_10": "Slovakia", "LC_100": "Fortuna Liga", ... }
+  "EventChanceTypes": [
+    {
+      "EventID": 1,
+      "EventName": "Team A - Team B",
+      "EventDate": "2026-06-15T18:00:00",
+      "SportID": 1,
+      "RegionID": 10,
+      "LeagueCupID": 100,
+      "EventChanceTypeID": 999
+    }
+  ],
+  "Odds": {
+    "999_1": { "OddsRate": 1.85 },
+    "999_X": { "OddsRate": 3.4 },
+    "999_2": { "OddsRate": 4.2 },
+    "999_1X": { "OddsRate": 1.2 },
+    "999_X2": { "OddsRate": 1.9 }
+  },
+  "Labels": {
+    "SP_1": { "Name": "Football" },
+    "RE_10": { "Name": "Slovakia" },
+    "LC_100": { "Name": "Fortuna Liga" }
+  }
 }
 ```
 
-`OddTypeID` mapping: `1`=1 (home), `2`=X (draw), `3`=2 (away), `4`=1X, `5`=X2
+The selectors enrich raw matches with label names and resolve odds into these fields:
 
-## Development server
+- `home`
+- `draw`
+- `away`
+- `homeOrDraw`
+- `drawOrAway`
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Scripts
 
 ```bash
-ng generate component component-name
+npm start   # ng serve
+npm run build
+npm test    # ng test
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Build
 
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
+Production output is written to `dist/`.
 
-To build the project run:
+## Tests
 
 ```bash
-ng build
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Notes
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- The HTTP service retries failed requests twice before surfacing an error state.
+- Router preloading is enabled with `PreloadAllModules`.
+- Store devtools are enabled only when `environment.production` is `false`.

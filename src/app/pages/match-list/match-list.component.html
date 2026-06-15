@@ -18,7 +18,7 @@
 }
 
 @if (status() === 'success') {
-  @if (groups().length === 0) {
+  @if (allGroups().length === 0) {
     <mat-card class="empty-state">
       <mat-card-content>
         <p>No matches available.</p>

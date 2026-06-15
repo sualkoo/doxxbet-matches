@@ -43,52 +43,85 @@ export class MatchListComponent implements OnInit {
   private readonly highlightLevel = toSignal(this.store.select(selectHighlightLevel), {
     initialValue: 0,
   });
-  private readonly allGroups = toSignal(this.store.select(selectGroupedMatches), {
+
+  readonly allGroups = toSignal(this.store.select(selectGroupedMatches), {
     initialValue: [],
   });
-
-  readonly groups = this.allGroups;
 
   readonly selectedLeagueId = signal<string | null>(null);
   readonly collapsedLeagues = signal<ReadonlySet<string>>(new Set());
 
   readonly visibleLeagues = computed<LeagueGroup[]>(() => {
-    let leagues = this.groups().flatMap((s) => s.leagues);
-
-    const leagueId = this.selectedLeagueId();
-
-    if (leagueId !== null) leagues = this.filterLeaguesByLeague(leagues, leagueId);
-    return leagues;
+    return this.getVisibleLeagues(this.allGroups(), this.selectedLeagueId());
   });
 
-  private filterLeaguesByLeague(leagues: LeagueGroup[], leagueId: string): LeagueGroup[] {
-    return leagues.filter((l) => l.leagueId === leagueId);
+  private getVisibleLeagues(
+    groups: ReadonlyArray<{ leagues: LeagueGroup[] }>,
+    selectedLeagueId: string | null,
+  ): LeagueGroup[] {
+    const leagues = this.getAllLeagues(groups);
+    return this.selectLeagueById(leagues, selectedLeagueId);
+  }
+
+  private getAllLeagues(groups: ReadonlyArray<{ leagues: LeagueGroup[] }>): LeagueGroup[] {
+    return groups.flatMap((group) => group.leagues);
+  }
+
+  private selectLeagueById(leagues: LeagueGroup[], leagueId: string | null): LeagueGroup[] {
+    if (leagueId === null) return leagues;
+    const league = leagues.find((l) => l.leagueId === leagueId);
+    return league ? [league] : [];
   }
 
   private readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
-    const allValues = this.visibleLeagues().flatMap((league) =>
-      league.matches.flatMap((m) =>
-        [m.odds.home, m.odds.draw, m.odds.away, m.odds.homeOrDraw, m.odds.drawOrAway].filter(
-          (v): v is number => v !== null,
-        ),
-      ),
-    );
-    return [...new Set(allValues)].sort((a, b) => b - a);
+    return this.getVisibleSortedUniqueOddValues();
   });
 
   readonly highlightedOdd = computed<number | null>(() => {
-    const sortedValues = this.visibleSortedUniqueOddValues();
-    if (sortedValues.length === 0) return null;
-    const level = this.highlightLevel();
-    const len = sortedValues.length;
-    return sortedValues[((level % len) + len) % len];
+    return this.getHighlightedOdd(this.visibleSortedUniqueOddValues(), this.highlightLevel());
   });
 
   readonly allLeaguesCollapsed = computed<boolean>(() => {
-    const leagues = this.visibleLeagues();
-    if (leagues.length === 0) return false;
-    return leagues.every((l) => this.collapsedLeagues().has(l.leagueId));
+    return this.areAllVisibleLeaguesCollapsed(this.visibleLeagues(), this.collapsedLeagues());
   });
+
+  private getVisibleSortedUniqueOddValues(): number[] {
+    const uniqueOdds = this.collectUniqueVisibleOdds();
+    return [...uniqueOdds].sort((a, b) => b - a);
+  }
+
+  private collectUniqueVisibleOdds(): Set<number> {
+    const uniqueOdds = new Set<number>();
+
+    for (const league of this.visibleLeagues()) {
+      for (const match of league.matches) {
+        this.addMatchOdds(uniqueOdds, match.odds);
+      }
+    }
+
+    return uniqueOdds;
+  }
+
+  private addMatchOdds(target: Set<number>, odds: LeagueGroup['matches'][number]['odds']): void {
+    const values = [odds.home, odds.draw, odds.away, odds.homeOrDraw, odds.drawOrAway];
+    for (const value of values) {
+      if (value != null) target.add(value);
+    }
+  }
+
+  private getHighlightedOdd(sortedValues: number[], level: number): number | null {
+    if (sortedValues.length === 0) return null;
+    const len = sortedValues.length;
+    return sortedValues[((level % len) + len) % len];
+  }
+
+  private areAllVisibleLeaguesCollapsed(
+    leagues: LeagueGroup[],
+    collapsedLeagues: ReadonlySet<string>,
+  ): boolean {
+    if (leagues.length === 0) return false;
+    return leagues.every((l) => collapsedLeagues.has(l.leagueId));
+  }
 
   ngOnInit(): void {
     if (this.status() === 'idle') {
@@ -120,8 +153,12 @@ export class MatchListComponent implements OnInit {
     if (this.allLeaguesCollapsed()) {
       this.collapsedLeagues.set(new Set());
     } else {
-      this.collapsedLeagues.set(new Set(this.visibleLeagues().map((l) => l.leagueId)));
+      this.collapsedLeagues.set(new Set(this.getVisibleLeagueIds()));
     }
+  }
+
+  private getVisibleLeagueIds(): string[] {
+    return this.visibleLeagues().map((league) => league.leagueId);
   }
 
   toggleLeague(leagueId: string): void {
