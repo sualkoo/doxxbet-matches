@@ -21,6 +21,8 @@ import { MatchesSidenavComponent } from '../../components/matches-sidenav/matche
 import { MatchesToolbarComponent } from '../../components/matches-toolbar/matches-toolbar.component';
 import { LeagueSectionComponent } from '../../components/league-section/league-section.component';
 
+type MatchOdds = LeagueGroup['matches'][number]['odds'];
+
 @Component({
   selector: 'app-match-list',
   standalone: true,
@@ -70,7 +72,7 @@ export class MatchListComponent implements OnInit {
   private selectLeagueById(leagues: LeagueGroup[], leagueId: string | null): LeagueGroup[] {
     if (leagueId === null) return leagues;
     const league = leagues.find((l) => l.leagueId === leagueId);
-    return league ? [league] : [];
+    return [league!];
   }
 
   private readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
@@ -95,18 +97,21 @@ export class MatchListComponent implements OnInit {
 
     for (const league of this.visibleLeagues()) {
       for (const match of league.matches) {
-        this.addMatchOdds(uniqueOdds, match.odds);
+        const oddValues = [
+          match.odds.home,
+          match.odds.draw,
+          match.odds.away,
+          match.odds.homeOrDraw,
+          match.odds.drawOrAway,
+        ];
+
+        for (const oddValue of oddValues) {
+          if (oddValue != null) uniqueOdds.add(oddValue);
+        }
       }
     }
 
     return uniqueOdds;
-  }
-
-  private addMatchOdds(target: Set<number>, odds: LeagueGroup['matches'][number]['odds']): void {
-    const values = [odds.home, odds.draw, odds.away, odds.homeOrDraw, odds.drawOrAway];
-    for (const value of values) {
-      if (value != null) target.add(value);
-    }
   }
 
   private getHighlightedOdd(sortedValues: number[], level: number): number | null {
