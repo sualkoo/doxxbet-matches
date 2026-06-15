@@ -38,9 +38,8 @@ import { LeagueSectionComponent } from '../../components/league-section/league-s
 export class MatchListComponent implements OnInit {
   private readonly store = inject(Store);
 
-  // ── Store-backed signals ─────────────────────────────────────────────────────
-
   readonly status = toSignal(this.store.select(selectStatus), { initialValue: 'idle' as const });
+
   private readonly highlightLevel = toSignal(this.store.select(selectHighlightLevel), {
     initialValue: 0,
   });
@@ -48,24 +47,19 @@ export class MatchListComponent implements OnInit {
     initialValue: [],
   });
 
-  // ── Derived data ─────────────────────────────────────────────────────────────
-
   readonly groups = this.allGroups;
+
+  readonly selectedLeagueId = signal<string | null>(null);
+  readonly collapsedLeagues = signal<ReadonlySet<string>>(new Set());
 
   readonly visibleLeagues = computed<LeagueGroup[]>(() => {
     let leagues = this.groups().flatMap((s) => s.leagues);
 
-    const regionId = this.selectedRegionId();
     const leagueId = this.selectedLeagueId();
 
-    if (regionId !== null) leagues = this.filterLeaguesByRegion(leagues, regionId);
     if (leagueId !== null) leagues = this.filterLeaguesByLeague(leagues, leagueId);
     return leagues;
   });
-
-  private filterLeaguesByRegion(leagues: LeagueGroup[], regionId: number): LeagueGroup[] {
-    return leagues.filter((l) => l.matches.some((m) => m.RegionID === regionId));
-  }
 
   private filterLeaguesByLeague(leagues: LeagueGroup[], leagueId: string): LeagueGroup[] {
     return leagues.filter((l) => l.leagueId === leagueId);
@@ -96,21 +90,11 @@ export class MatchListComponent implements OnInit {
     return leagues.every((l) => this.collapsedLeagues().has(l.leagueId));
   });
 
-  // ── Local UI state ───────────────────────────────────────────────────────────
-
-  readonly selectedRegionId = signal<number | null>(null);
-  readonly selectedLeagueId = signal<string | null>(null);
-  readonly collapsedLeagues = signal<ReadonlySet<string>>(new Set());
-
-  // ── Lifecycle ────────────────────────────────────────────────────────────────
-
   ngOnInit(): void {
     if (this.status() === 'idle') {
       this.store.dispatch(MatchesActions.loadMatches());
     }
   }
-
-  // ── Store dispatches ─────────────────────────────────────────────────────────
 
   retry(): void {
     this.store.dispatch(MatchesActions.loadMatches());
@@ -123,8 +107,6 @@ export class MatchListComponent implements OnInit {
   cycleHighlightPrev(): void {
     this.store.dispatch(MatchesActions.stepOddHighlight({ direction: -1 }));
   }
-
-  // ── UI event handlers ────────────────────────────────────────────────────────
 
   selectLeague(leagueId: string | null): void {
     if (leagueId === null) {
