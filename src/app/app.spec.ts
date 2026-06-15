@@ -1,12 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { ENVIRONMENT } from '../environments/environment.token';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        {
+          provide: ENVIRONMENT,
+          useValue: {
+            production: false,
+            apiUrl: 'https://example.test/list.json',
+          },
+        },
+      ],
     }).compileComponents();
   });
 
