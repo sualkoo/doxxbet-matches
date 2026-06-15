@@ -1,5 +1,8 @@
 <app-matches-toolbar
+  [sortedOddValues]="visibleSortedUniqueOddValues()"
+  [highlightLevel]="highlightLevel()"
   [highlightedOdd]="highlightedOdd()"
+  (highlightedOddChange)="highlightedOdd.set($event)"
   [allLeaguesCollapsed]="allLeaguesCollapsed()"
   (allLeaguesCollapsedChange)="toggleAllVisibleLeagues()"
   (cycleNextOdd)="cycleHighlightNext()"

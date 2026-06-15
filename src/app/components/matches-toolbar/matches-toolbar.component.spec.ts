@@ -38,7 +38,8 @@ describe('MatchesToolbarComponent', () => {
   });
 
   it('should render formatted highlighted odd and enable previous button', () => {
-    fixture.componentRef.setInput('highlightedOdd', 2.3);
+    fixture.componentRef.setInput('sortedOddValues', [2.3, 2.1]);
+    fixture.componentRef.setInput('highlightLevel', 0);
     fixture.detectChanges();
 
     const nativeElement = fixture.nativeElement as HTMLElement;
@@ -52,7 +53,8 @@ describe('MatchesToolbarComponent', () => {
   });
 
   it('should emit previous and next highlighted odd events', () => {
-    fixture.componentRef.setInput('highlightedOdd', 2.3);
+    fixture.componentRef.setInput('sortedOddValues', [2.3, 2.1]);
+    fixture.componentRef.setInput('highlightLevel', 0);
     fixture.detectChanges();
     const prevSpy = vi.spyOn(component.cyclePrevOdd, 'emit');
     const nextSpy = vi.spyOn(component.cycleNextOdd, 'emit');
@@ -91,5 +93,60 @@ describe('MatchesToolbarComponent', () => {
     expect(component.allLeaguesCollapsed()).toBe(true);
     expect(toggleButton.textContent?.trim()).toBe('Expand all');
     expect(toggleButton.getAttribute('aria-label')).toBe('Expand all leagues');
+  });
+
+  it('should calculate highlighted odd from sorted values and level with wrap-around', () => {
+    fixture.componentRef.setInput('sortedOddValues', [3.2, 2.5, 2.1, 1.9, 1.7, 1.6]);
+    fixture.componentRef.setInput('highlightLevel', 0);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(3.2);
+
+    fixture.componentRef.setInput('highlightLevel', 1);
+    fixture.detectChanges();
+    expect(component.highlightedOdd()).toBe(2.5);
+
+    fixture.componentRef.setInput('highlightLevel', -1);
+    fixture.detectChanges();
+    expect(component.highlightedOdd()).toBe(1.6);
+  });
+
+  it('should preserve current highlighted odd when sorted values change and odd is still visible', () => {
+    fixture.componentRef.setInput('sortedOddValues', [3.2, 2.5, 2.1]);
+    fixture.componentRef.setInput('highlightLevel', 1);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(2.5);
+
+    fixture.componentRef.setInput('sortedOddValues', [5, 4, 2.5, 2]);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(2.5);
+  });
+
+  it('should recalculate highlighted odd when current odd is no longer visible', () => {
+    fixture.componentRef.setInput('sortedOddValues', [3.2, 2.5, 2.1]);
+    fixture.componentRef.setInput('highlightLevel', 1);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(2.5);
+
+    fixture.componentRef.setInput('sortedOddValues', [5, 4, 2]);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(4);
+  });
+
+  it('should recalculate highlighted odd when highlight level changes', () => {
+    fixture.componentRef.setInput('sortedOddValues', [5, 4, 2.5, 2]);
+    fixture.componentRef.setInput('highlightLevel', 1);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(4);
+
+    fixture.componentRef.setInput('highlightLevel', 0);
+    fixture.detectChanges();
+
+    expect(component.highlightedOdd()).toBe(5);
   });
 });

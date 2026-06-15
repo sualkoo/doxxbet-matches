@@ -21,8 +21,6 @@ import { MatchesSidenavComponent } from '../../components/matches-sidenav/matche
 import { MatchesToolbarComponent } from '../../components/matches-toolbar/matches-toolbar.component';
 import { LeagueSectionComponent } from '../../components/league-section/league-section.component';
 
-type MatchOdds = LeagueGroup['matches'][number]['odds'];
-
 @Component({
   selector: 'app-match-list',
   standalone: true,
@@ -42,7 +40,7 @@ export class MatchListComponent implements OnInit {
 
   readonly status = toSignal(this.store.select(selectStatus), { initialValue: 'idle' as const });
 
-  private readonly highlightLevel = toSignal(this.store.select(selectHighlightLevel), {
+  readonly highlightLevel = toSignal(this.store.select(selectHighlightLevel), {
     initialValue: 0,
   });
 
@@ -75,13 +73,11 @@ export class MatchListComponent implements OnInit {
     return [league!];
   }
 
-  private readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
+  readonly visibleSortedUniqueOddValues = computed<number[]>(() => {
     return this.getVisibleSortedUniqueOddValues();
   });
 
-  readonly highlightedOdd = computed<number | null>(() => {
-    return this.getHighlightedOdd(this.visibleSortedUniqueOddValues(), this.highlightLevel());
-  });
+  readonly highlightedOdd = signal<number | null>(null);
 
   readonly allLeaguesCollapsed = computed<boolean>(() => {
     return this.areAllVisibleLeaguesCollapsed(this.visibleLeagues(), this.collapsedLeagues());
@@ -112,15 +108,6 @@ export class MatchListComponent implements OnInit {
     }
 
     return uniqueOdds;
-  }
-
-  private getHighlightedOdd(sortedValues: number[], level: number): number | null {
-    if (sortedValues.length === 0) return null;
-
-    const len = sortedValues.length;
-    const highlightedOddIndex = ((level % len) + len) % len;
-
-    return sortedValues[highlightedOddIndex];
   }
 
   private areAllVisibleLeaguesCollapsed(

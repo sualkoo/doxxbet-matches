@@ -175,21 +175,11 @@ describe('MatchListComponent', () => {
     expect(component.visibleLeagues().map((league) => league.leagueId)).toEqual(['10', '11']);
   });
 
-  it('should calculate highlighted odd from sorted unique visible odds with wrap-around', () => {
+  it('should provide sorted unique visible odds for toolbar highlighting', () => {
     const fixture = createComponent();
     const component = fixture.componentInstance;
 
-    expect(component.highlightedOdd()).toBe(3.2);
-
-    store.overrideSelector(selectHighlightLevel, 1);
-    store.refreshState();
-    fixture.detectChanges();
-    expect(component.highlightedOdd()).toBe(2.5);
-
-    store.overrideSelector(selectHighlightLevel, -1);
-    store.refreshState();
-    fixture.detectChanges();
-    expect(component.highlightedOdd()).toBe(1.6);
+    expect(component.visibleSortedUniqueOddValues()).toEqual([3.2, 2.5, 2.1, 1.9, 1.7, 1.6]);
   });
 
   it('should toggle collapse state for all visible leagues and individual leagues', () => {
